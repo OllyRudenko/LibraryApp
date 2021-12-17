@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS public.users, public.books, public.orders, public.penalties, public.orders_users, public.penalties_users;
-DROP TYPE IF EXISTS role, order_status;
+DROP TABLE IF EXISTS public.users, public.books, public.orders;
+DROP TYPE IF EXISTS role, order_status, bill_status;
 
  GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO admin;
  GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO admin;
@@ -26,65 +26,28 @@ CREATE TABLE public.books
     author character varying(200) NOT NULL,
     issuing_organization character varying(200) NOT NULL,
     issue_date integer NOT NULL,
-    ordered BOOLEAN NOT NULL
+    items integer NOT NULL
 )
 WITH (
     OIDS = FALSE
 );
 
 CREATE TYPE order_status AS ENUM ('UNCONFIRMED', 'SUBSCRIPTION', 'READING_ROOM');
+CREATE TYPE bill_status AS ENUM ('PAID', 'UNPAID');
 CREATE TABLE public.orders(
     id BIGSERIAL PRIMARY KEY,
     book_id bigint NOT NULL,
     FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    quantity integer NOT NULL,
     user_id bigint NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     order_status order_status,
     taked_date DATE NOT NULL,
     return_date DATE NOT NULL,
-    amount_days integer NOT NULL
-
+    bill integer,
+    bill_status bill_status
 )
 WITH (
     OIDS = FALSE
 );
 -- todo TIMESTAMP
-
-CREATE TABLE public.penalties(
-    id BIGSERIAL PRIMARY KEY,
-    user_id bigint NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    order_id bigint NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    summ  DOUBLE PRECISION NOT NULL
-)
-WITH (
-    OIDS = FALSE
-);
-
-ALTER TABLE public.orders
-ADD COLUMN penalty_id bigint,
-ADD CONSTRAINT fk_orders_penalties FOREIGN KEY (penalty_id)
-REFERENCES penalties (id) ON DELETE CASCADE;
-
-CREATE TABLE public.orders_users(
-    order_id bigint NOT NULL,
-    user_id bigint NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE  ON UPDATE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE  ON UPDATE CASCADE,
-    UNIQUE (order_id, user_id)
-)
-WITH (
-    OIDS = FALSE
-);
-
-CREATE TABLE public.penalties_users(
-    penalty_id bigint NOT NULL,
-    user_id bigint NOT NULL,
-    FOREIGN KEY (penalty_id) REFERENCES penalties(id) ON DELETE CASCADE  ON UPDATE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE  ON UPDATE CASCADE,
-    UNIQUE (penalty_id, user_id)
-)
-WITH (
-    OIDS = FALSE
-);

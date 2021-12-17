@@ -26,8 +26,6 @@ public class User extends BaseEntity {
 
     private List<Order> orders;
 
-    private List<Penalty> penalties;
-
     public User() {
     }
 
@@ -41,7 +39,7 @@ public class User extends BaseEntity {
         this.adress = adress;
     }
 
-    public User(Long id, String firstName, String lastName, Role role, String email, String password, String phone, String adress, List<Order> orders, List<Penalty> penalties) {
+    public User(Long id, String firstName, String lastName, Role role, String email, String password, String phone, String adress, List<Order> orders) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -51,7 +49,6 @@ public class User extends BaseEntity {
         this.phone = phone;
         this.adress = adress;
         this.orders = orders;
-        this.penalties = penalties;
     }
 
     public Long getId() {
@@ -126,25 +123,17 @@ public class User extends BaseEntity {
         this.orders = orders;
     }
 
-    public List<Penalty> getPenalties() {
-        return penalties;
-    }
-
-    public void setPenalties(List<Penalty> penalties) {
-        this.penalties = penalties;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && role == user.role && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(phone, user.phone) && Objects.equals(adress, user.adress) && Objects.equals(orders, user.orders) && Objects.equals(penalties, user.penalties);
+        return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && role == user.role && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(phone, user.phone) && Objects.equals(adress, user.adress) && Objects.equals(orders, user.orders);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, role, email, password, phone, adress, orders, penalties);
+        return Objects.hash(id, firstName, lastName, role, email, password, phone, adress, orders);
     }
 
     @Override
@@ -161,7 +150,6 @@ public class User extends BaseEntity {
                 .append("phone", phone)
                 .append("adress", adress)
                 .append("orders", orders)
-                .append("penalties", penalties)
                 .toString();
     }
 }

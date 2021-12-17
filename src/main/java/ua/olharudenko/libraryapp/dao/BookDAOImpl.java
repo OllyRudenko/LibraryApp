@@ -37,7 +37,7 @@ public class BookDAOImpl implements ModelDAO<Book> {
                     book.setAuthor(resultSet.getString("author"));
                     book.setIssuingOrganization(resultSet.getString("issuing_organization"));
                     book.setIssueDate(resultSet.getInt("issue_date"));
-                    book.setOrdered(resultSet.getBoolean("ordered"));
+                    book.setItems(resultSet.getInt("items"));
                 }
             }
         } catch (SQLException e) {
@@ -73,7 +73,7 @@ public class BookDAOImpl implements ModelDAO<Book> {
                 book.setAuthor(resultSet.getString("author"));
                 book.setIssuingOrganization(resultSet.getString("issuing_organization"));
                 book.setIssueDate(resultSet.getInt("issue_date"));
-                book.setOrdered(resultSet.getBoolean("ordered"));
+                book.setItems(resultSet.getInt("items"));
                 allBooks.add(book);
             }
         } catch (SQLException e) {
@@ -90,14 +90,13 @@ public class BookDAOImpl implements ModelDAO<Book> {
             throw new SQLException("table BOOKS is empty");
         }
         return allBooks;
-
     }
 
     @Override
     public Book save(Book book) {
         Connection connection = null;
         PreparedStatement pstatement = null;
-        String sql = "insert into books(title, author, issuing_organization, issue_date, ordered) values (?, ?, ?, ?, ?)";
+        String sql = "insert into books(title, author, issuing_organization, issue_date, items) values (?, ?, ?, ?, ?)";
         try {
             connection = DataBaseConnection.getInstance().getConn();
             pstatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -105,7 +104,7 @@ public class BookDAOImpl implements ModelDAO<Book> {
             pstatement.setString(2, book.getAuthor());
             pstatement.setString(3, book.getIssuingOrganization());
             pstatement.setInt(4, book.getIssueDate());
-            pstatement.setBoolean(5, book.isOrdered());
+            pstatement.setInt(5, book.getItems());
 
             if (pstatement.executeUpdate() == 0) {
                 throw new SQLException("Adding book to database failed, no rows affected.");
@@ -117,7 +116,6 @@ public class BookDAOImpl implements ModelDAO<Book> {
                     throw new SQLException("Adding book to database failed, no ID obtained");
                 }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -135,7 +133,7 @@ public class BookDAOImpl implements ModelDAO<Book> {
     public void update(Book book) throws SQLException {
         Connection connection = null;
         PreparedStatement pstatement = null;
-        String sql = "UPDATE books SET title=?, author=?, issuing_organization=?, issue_date=?, ordered=? WHERE id =?";
+        String sql = "UPDATE books SET title=?, author=?, issuing_organization=?, issue_date=?, items=? WHERE id =?";
         try {
             connection = DataBaseConnection.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
@@ -145,7 +143,7 @@ public class BookDAOImpl implements ModelDAO<Book> {
                 pstatement.setString(2, book.getAuthor());
                 pstatement.setString(3, book.getIssuingOrganization());
                 pstatement.setInt(4, book.getIssueDate());
-                pstatement.setBoolean(5, book.isOrdered());
+                pstatement.setInt(5, book.getItems());
                 pstatement.executeUpdate();
             }
         } catch (SQLException e) {

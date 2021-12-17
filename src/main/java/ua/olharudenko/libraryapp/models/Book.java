@@ -16,26 +16,26 @@ public class Book extends BaseEntity {
 
     private int issueDate;
 
-    private boolean ordered;
+    private int items;
 
     public Book() {
     }
 
-    public Book(String title, String author, String issuingOrganization, int issueDate, boolean ordered) {
+    public Book(String title, String author, String issuingOrganization, int issueDate, int items) {
         this.title = title;
         this.author = author;
         this.issuingOrganization = issuingOrganization;
         this.issueDate = issueDate;
-        this.ordered = ordered;
+        this.items = items;
     }
 
-    public Book(Long id, String title, String author, String issuingOrganization, int issueDate, boolean ordered) {
+    public Book(Long id, String title, String author, String issuingOrganization, int issueDate, int items) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.issuingOrganization = issuingOrganization;
         this.issueDate = issueDate;
-        this.ordered = ordered;
+        this.items = items;
     }
 
     public Long getId() {
@@ -78,12 +78,12 @@ public class Book extends BaseEntity {
         this.issueDate = issueDate;
     }
 
-    public boolean isOrdered() {
-        return ordered;
+    public int getItems() {
+        return items;
     }
 
-    public void setOrdered(boolean ordered) {
-        this.ordered = ordered;
+    public void setItems(int items) {
+        this.items = items;
     }
 
     @Override
@@ -91,12 +91,12 @@ public class Book extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return issueDate == book.issueDate && ordered == book.ordered && Objects.equals(id, book.id) && Objects.equals(title, book.title) && Objects.equals(author, book.author) && Objects.equals(issuingOrganization, book.issuingOrganization);
+        return issueDate == book.issueDate && items == book.items && Objects.equals(id, book.id) && Objects.equals(title, book.title) && Objects.equals(author, book.author) && Objects.equals(issuingOrganization, book.issuingOrganization);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, author, issuingOrganization, issueDate, ordered);
+        return Objects.hash(id, title, author, issuingOrganization, issueDate, items);
     }
 
     @Override
@@ -110,7 +110,7 @@ public class Book extends BaseEntity {
                 .append(" author", author)
                 .append(" issuingOrganization", issuingOrganization)
                 .append(" issueDate", issueDate)
-                .append(" ordered", ordered)
+                .append(" ordered", items)
                 .append('}')
                 .toString();
     }

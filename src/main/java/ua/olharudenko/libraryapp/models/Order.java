@@ -1,6 +1,7 @@
 package ua.olharudenko.libraryapp.models;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import ua.olharudenko.libraryapp.enums.BillStatus;
 import ua.olharudenko.libraryapp.enums.OrderStatus;
 
 import java.time.LocalDate;
@@ -20,32 +21,36 @@ public class Order extends BaseEntity {
 
     private LocalDate returnDate;
 
-    private int amountDays;
+    private int quantity;
+// todo change to double
+    private int bill;
 
-    private Penalty penalty;
+    private BillStatus billStatus;
 
     public Order() {
     }
 
-    public Order(Book book, User user, OrderStatus orderStatus, LocalDate takedDate, LocalDate returnDate, int amountDays, Penalty penalty) {
+    public Order(Book book, User user, OrderStatus orderStatus, LocalDate takedDate, LocalDate returnDate, int quantity, int bill, BillStatus billStatus) {
         this.book = book;
         this.user = user;
         this.orderStatus = orderStatus;
         this.takedDate = takedDate;
         this.returnDate = returnDate;
-        this.amountDays = amountDays;
-        this.penalty = penalty;
+        this.quantity = quantity;
+        this.bill = bill;
+        this.billStatus = billStatus;
     }
 
-    public Order(Long id, Book book, User user, OrderStatus orderStatus, LocalDate takedDate, LocalDate returnDate, int amountDays, Penalty penalty) {
+    public Order(Long id, Book book, User user, OrderStatus orderStatus, LocalDate takedDate, LocalDate returnDate, int quantity, int bill, BillStatus billStatus) {
         this.id = id;
         this.book = book;
         this.user = user;
         this.orderStatus = orderStatus;
         this.takedDate = takedDate;
         this.returnDate = returnDate;
-        this.amountDays = amountDays;
-        this.penalty = penalty;
+        this.quantity = quantity;
+        this.bill = bill;
+        this.billStatus = billStatus;
     }
 
     public Long getId() {
@@ -96,20 +101,28 @@ public class Order extends BaseEntity {
         this.returnDate = returnDate;
     }
 
-    public int getAmountDays() {
-        return amountDays;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setAmountDays(int amountDays) {
-        this.amountDays = amountDays;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
-    public Penalty getPenalty() {
-        return penalty;
+    public int getBill() {
+        return bill;
     }
 
-    public void setPenalty(Penalty penalty) {
-        this.penalty = penalty;
+    public void setBill(int bill) {
+        this.bill = bill;
+    }
+
+    public BillStatus getBillStatus() {
+        return billStatus;
+    }
+
+    public void setBillStatus(BillStatus billStatus) {
+        this.billStatus = billStatus;
     }
 
     @Override
@@ -117,12 +130,12 @@ public class Order extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return amountDays == order.amountDays && Objects.equals(id, order.id) && Objects.equals(book, order.book) && Objects.equals(user, order.user) && orderStatus == order.orderStatus && Objects.equals(takedDate, order.takedDate) && Objects.equals(returnDate, order.returnDate) && Objects.equals(penalty, order.penalty);
+        return quantity == order.quantity && Objects.equals(id, order.id) && Objects.equals(book, order.book) && Objects.equals(user, order.user) && orderStatus == order.orderStatus && Objects.equals(takedDate, order.takedDate) && Objects.equals(returnDate, order.returnDate) && Objects.equals(bill, order.bill) && Objects.equals(billStatus, order.billStatus);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, book, user, orderStatus, takedDate, returnDate, amountDays, penalty);
+        return Objects.hash(id, book, user, orderStatus, takedDate, returnDate, quantity, bill, billStatus);
     }
 
     @Override
@@ -136,8 +149,9 @@ public class Order extends BaseEntity {
                 .append("orderStatus", orderStatus)
                 .append("takedDate", takedDate)
                 .append("returnDate", returnDate)
-                .append("amountDays", amountDays)
-                .append("penalty", penalty)
+                .append("quantity", quantity)
+                .append("bill", bill)
+                .append("billStatus", billStatus)
                 .toString();
     }
 }
