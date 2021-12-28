@@ -22,7 +22,7 @@ public class Order extends BaseEntity {
     private LocalDate returnDate;
 
     private int quantity;
-// todo change to double
+    // todo change to double
     private int bill;
 
     private BillStatus billStatus;
@@ -140,18 +140,6 @@ public class Order extends BaseEntity {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("createdDate", createdDate)
-                .append("updatedDate", updatedDate)
-                .append("id", id)
-                .append("book", book)
-                .append("user", user)
-                .append("orderStatus", orderStatus)
-                .append("takedDate", takedDate)
-                .append("returnDate", returnDate)
-                .append("quantity", quantity)
-                .append("bill", bill)
-                .append("billStatus", billStatus)
-                .toString();
+        return new ToStringBuilder(this).append("createdDate", createdDate).append("updatedDate", updatedDate).append("id", id).append("book", book).append("user", user).append("orderStatus", orderStatus).append("takedDate", takedDate).append("returnDate", returnDate).append("quantity", quantity).append("bill", bill).append("billStatus", billStatus).toString();
     }
 }

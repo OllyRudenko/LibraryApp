@@ -1,10 +1,6 @@
 package ua.olharudenko.libraryapp.dao;
 
-import ua.olharudenko.libraryapp.enums.BillStatus;
-import ua.olharudenko.libraryapp.enums.OrderStatus;
 import ua.olharudenko.libraryapp.enums.Role;
-import ua.olharudenko.libraryapp.models.Book;
-import ua.olharudenko.libraryapp.models.Order;
 import ua.olharudenko.libraryapp.models.User;
 import ua.olharudenko.libraryapp.utils.DataBaseConnection;
 
@@ -61,7 +57,7 @@ public class UserDAOImpl implements ModelDAO<User> {
         Connection connection = null;
         PreparedStatement pstatement = null;
         ResultSet resultSet = null;
-        String sql = "select * from books";
+        String sql = "select * from users";
         try {
             connection = DataBaseConnection.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
@@ -149,7 +145,7 @@ public class UserDAOImpl implements ModelDAO<User> {
                 pstatement.setString(4, user.getEmail());
                 pstatement.setString(5, user.getPassword());
                 pstatement.setString(6, user.getPhone());
-                pstatement.setString(6, user.getAdress());
+                pstatement.setString(7, user.getAdress());
                 pstatement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -186,5 +182,46 @@ public class UserDAOImpl implements ModelDAO<User> {
                 throw new SQLException("delete: PreparedStatement didn't close", e);
             }
         }
+    }
+
+    public Optional<User> findUserByEmail(String email) throws SQLException {
+        User user = null;
+        Connection connection = null;
+        PreparedStatement pstatement = null;
+        ResultSet resultSet = null;
+        String sql = "select * from users  where email = ?";
+        System.out.println("EMAIL " + email);
+        try {
+            connection = DataBaseConnection.getInstance().getConn();
+            pstatement = connection.prepareStatement(sql);
+            pstatement.setString(1, email);
+            if (pstatement.execute()) {
+                resultSet = pstatement.executeQuery();
+                while (resultSet.next()) {
+                    user = new User();
+                    user.setId(resultSet.getLong("id"));
+                    user.setFirstName(resultSet.getString("first_name"));
+                    user.setLastName(resultSet.getString("last_name"));
+                    user.setRole(Role.valueOf(resultSet.getString("role")));
+                    user.setEmail(resultSet.getString("email"));
+                    user.setPassword(resultSet.getString("password"));
+                    user.setPhone(resultSet.getString("phone"));
+                    user.setAdress(resultSet.getString("adress"));
+                }
+                System.out.println("USERR " + user.toString());
+            }
+        } catch (SQLException e) {
+            throw new SQLException("USER NOT FOUND BY EMAIL", e);
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+//                pstatement.close();
+            } catch (SQLException e) {
+                throw new SQLException("get: ResultSet or PreparedStatement didn't close", e);
+            }
+        }
+        return Optional.ofNullable(user);
     }
 }

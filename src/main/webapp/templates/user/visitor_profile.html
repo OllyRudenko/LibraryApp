@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!--<script type='text/javascript'>-->
+<!--    var userID = '<%=Session["userRole"]%>';-->
+<!--    alert(userID);-->
+<!--</script>-->
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>VISITOR</title>
+    <script type="text/javascript">
+
+        window.onload = function () {
+
+            var name = 'Hi, ' + '@Session["userRole"]'
+
+            document.getElementById("lblUserName").innerHTML = name;
+
+        };
+
+ </script>
+</head>
+<body>
+
+
+<!--    <div th:each="el : ${user}" class="alert alert-info mt-2" align=left>-->
+<!--        <h5 th:inline="text">[[${el.firstName}]], [[${el.lastName}]], id=[[${el.email}]]</h5>-->
+<!--    </div>-->
+    <p>HELLO WORLD!</p>
+<!--    <span th:text="${name}"></span>-->
+<!--    <span th:text="${user.getRole()}"></span>-->
+
+<!--    <tr>-->
+<!--        <td>${name}</td>-->
+<!--        <td>${user.firstName} ${user.lastName}</td>-->
+<!--        <td>${userRole}</td>-->
+<!--        <td>${user.email}</td>-->
+<!--    </tr>-->
+
+<div>
+    <label id="lblUserName">
+
+    </label>
+
+</div>
+
+
+</body>
+</html>

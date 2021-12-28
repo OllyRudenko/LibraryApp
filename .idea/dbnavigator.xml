@@ -2,7 +2,7 @@
 <project version="4">
   <component name="DBNavigator.Project.DataEditorManager">
     <record-view-column-sorting-type value="BY_INDEX" />
-    <value-preview-text-wrapping value="true" />
+    <value-preview-text-wrapping value="false" />
     <value-preview-pinned value="false" />
   </component>
   <component name="DBNavigator.Project.DataExportManager">
@@ -23,24 +23,39 @@
   <component name="DBNavigator.Project.DatabaseBrowserManager">
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
-    <show-object-properties value="true" />
+    <show-object-properties value="false" />
     <loaded-nodes>
-      <connection connection-id="757ed23e-755e-4e79-806f-614c7b13f653">
-        <schema name="pg_catalog" object-types="table, view" />
-        <schema name="public" object-types="table, view" />
+      <connection connection-id="c9f0463d-b06c-4c96-b977-820b43f3a1dd">
+        <schema name="public" object-types="table, view, sequence, function, constraint, index, column, dataset trigger" />
       </connection>
     </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="757ed23e-755e-4e79-806f-614c7b13f653">
-      <console name="ConnectionLibrary" type="STANDARD" schema="information_schema" session="Main" />
+    <connection id="c9f0463d-b06c-4c96-b977-820b43f3a1dd">
+      <console name="ConnectionLibrary" type="STANDARD" schema="public" session="Main" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="757ed23e-755e-4e79-806f-614c7b13f653" />
+    <connection id="c9f0463d-b06c-4c96-b977-820b43f3a1dd" />
+  </component>
+  <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="c9f0463d-b06c-4c96-b977-820b43f3a1dd" dataset="public.users" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="c9f0463d-b06c-4c96-b977-820b43f3a1dd" dataset="public.file_references" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="c9f0463d-b06c-4c96-b977-820b43f3a1dd" dataset="public.publishing_houses" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="c9f0463d-b06c-4c96-b977-820b43f3a1dd" dataset="public.localized_publishing_houses" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="c9f0463d-b06c-4c96-b977-820b43f3a1dd" dataset="public.books" active-filter-id="EMPTY_FILTER">
+      <filter id="d25265a0-b91a-4e99-b91d-5e1ca0841a60" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
+        <condition column="id" operator="=" value="" active="true" />
+      </filter>
+    </filter-actions>
+    <filter-actions connection-id="c9f0463d-b06c-4c96-b977-820b43f3a1dd" dataset="public.localized_author" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="c9f0463d-b06c-4c96-b977-820b43f3a1dd" dataset="public.orders" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="c9f0463d-b06c-4c96-b977-820b43f3a1dd" dataset="public.localized_authors" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="c9f0463d-b06c-4c96-b977-820b43f3a1dd" dataset="public.authors" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="c9f0463d-b06c-4c96-b977-820b43f3a1dd" dataset="public.locales" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
@@ -49,7 +64,7 @@
     <retain-sticky-names value="false" />
   </component>
   <component name="DBNavigator.Project.FileConnectionMappingManager">
-    <mapping file-url="file://$PROJECT_DIR$/src/main/resources/db/postgresql/002_create_tables.sql" connection-id="757ed23e-755e-4e79-806f-614c7b13f653" session-id="MAIN" current-schema="public" />
+    <mapping file-url="file://$PROJECT_DIR$/src/main/resources/db/postgresql/002_create_tables.sql" connection-id="c9f0463d-b06c-4c96-b977-820b43f3a1dd" session-id="MAIN" current-schema="public" />
     <mapping file-url="file://$PROJECT_DIR$/src/main/resources/db/postgresql/001_create_user_qnd_database.sql" connection-id="757ed23e-755e-4e79-806f-614c7b13f653" session-id="MAIN" current-schema="public" />
   </component>
   <component name="DBNavigator.Project.MethodExecutionManager">
@@ -77,7 +92,7 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="757ed23e-755e-4e79-806f-614c7b13f653" active="true">
+      <connection id="c9f0463d-b06c-4c96-b977-820b43f3a1dd" active="true">
         <database>
           <name value="ConnectionLibrary" />
           <description value="" />

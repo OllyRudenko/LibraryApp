@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <PatternLayout pattern="LOGGING %d{HH:mm:ss.SSS} [%t] %-5level %l{36} %n%msg%n" />
+        </Console>
+        <RollingFile name="LogToRollingFile" fileName="logs.log"
+                     filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%d %p %c{1.} [%t] %n%m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="1 MB"/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="ua.olharudenko.libraryapp" level="error" additivity="false">
+            <AppenderRef ref="ConsoleAppender" />
+            <AppenderRef ref="LogToRollingFile"/>
+        </Logger>
+        <Logger name="ua.olharudenko.libraryapp" level="info" additivity="false">
+            <AppenderRef ref="ConsoleAppender" />
+            <AppenderRef ref="LogToRollingFile"/>
+        </Logger>
+
+        <Root level="info">
+            <AppenderRef ref="LogToRollingFile"/>
+        </Root>
+    </Loggers>
+</Configuration>
+

@@ -3,6 +3,7 @@ package ua.olharudenko.libraryapp.models;
 import java.util.Objects;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import ua.olharudenko.libraryapp.enums.Locale;
 
 public class Book extends BaseEntity {
 
@@ -10,9 +11,13 @@ public class Book extends BaseEntity {
 
     private String title;
 
-    private String author;
+    private Author author;
 
-    private String issuingOrganization;
+    private String description;
+
+    private Locale publish_locale;
+
+    private Long publish_house_id;
 
     private int issueDate;
 
@@ -21,19 +26,23 @@ public class Book extends BaseEntity {
     public Book() {
     }
 
-    public Book(String title, String author, String issuingOrganization, int issueDate, int items) {
+    public Book(String title, Author author, String description, Locale publish_locale, Long publish_house_id, int issueDate, int items) {
         this.title = title;
         this.author = author;
-        this.issuingOrganization = issuingOrganization;
+        this.description = description;
+        this.publish_locale = publish_locale;
+        this.publish_house_id = publish_house_id;
         this.issueDate = issueDate;
         this.items = items;
     }
 
-    public Book(Long id, String title, String author, String issuingOrganization, int issueDate, int items) {
+    public Book(Long id, String title, Author author, String description, Locale publish_locale, Long publish_house_id, int issueDate, int items) {
         this.id = id;
         this.title = title;
         this.author = author;
-        this.issuingOrganization = issuingOrganization;
+        this.description = description;
+        this.publish_locale = publish_locale;
+        this.publish_house_id = publish_house_id;
         this.issueDate = issueDate;
         this.items = items;
     }
@@ -54,20 +63,36 @@ public class Book extends BaseEntity {
         this.title = title;
     }
 
-    public String getAuthor() {
+    public Author getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(Author author) {
         this.author = author;
     }
 
-    public String getIssuingOrganization() {
-        return issuingOrganization;
+    public String getDescription() {
+        return description;
     }
 
-    public void setIssuingOrganization(String issuingOrganization) {
-        this.issuingOrganization = issuingOrganization;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Locale getPublish_locale() {
+        return publish_locale;
+    }
+
+    public void setPublish_locale(Locale publish_locale) {
+        this.publish_locale = publish_locale;
+    }
+
+    public Long getPublish_house_id() {
+        return publish_house_id;
+    }
+
+    public void setPublish_house_id(Long publish_house_id) {
+        this.publish_house_id = publish_house_id;
     }
 
     public int getIssueDate() {
@@ -91,27 +116,25 @@ public class Book extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return issueDate == book.issueDate && items == book.items && Objects.equals(id, book.id) && Objects.equals(title, book.title) && Objects.equals(author, book.author) && Objects.equals(issuingOrganization, book.issuingOrganization);
+        return issueDate == book.issueDate && items == book.items && Objects.equals(id, book.id) && Objects.equals(title, book.title) && Objects.equals(author, book.author) && Objects.equals(description, book.description) && publish_locale == book.publish_locale && Objects.equals(publish_house_id, book.publish_house_id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, author, issuingOrganization, issueDate, items);
+        return Objects.hash(id, title, author, description, publish_locale, publish_house_id, issueDate, items);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("Book{")
-                .append(" createdDate", createdDate)
-                .append(" updatedDate", updatedDate)
-                .append(" id", id)
-                .append(" title", title)
-                .append(" author", author)
-                .append(" issuingOrganization", issuingOrganization)
-                .append(" issueDate", issueDate)
-                .append(" ordered", items)
-                .append('}')
+                .append("id", id)
+                .append("title", title)
+                .append("author", author)
+                .append("description", description)
+                .append("publish_locale", publish_locale)
+                .append("publish_house_id", publish_house_id)
+                .append("issueDate", issueDate)
+                .append("items", items)
                 .toString();
     }
 }

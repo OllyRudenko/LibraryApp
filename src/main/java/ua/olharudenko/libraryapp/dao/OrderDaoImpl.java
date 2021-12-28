@@ -4,20 +4,18 @@ import ua.olharudenko.libraryapp.enums.BillStatus;
 import ua.olharudenko.libraryapp.enums.OrderStatus;
 import ua.olharudenko.libraryapp.models.Book;
 import ua.olharudenko.libraryapp.models.Order;
-import ua.olharudenko.libraryapp.models.User;
 import ua.olharudenko.libraryapp.utils.DataBaseConnection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class OrderDaoImpl implements ModelDAO<Order> {
+
+    private BookDAOImpl bookDAO = new BookDAOImpl();
+
+    private UserDAOImpl userDAO = new UserDAOImpl();
 
     @Override
     public Optional<Order> get(long id) throws SQLException {
@@ -35,11 +33,9 @@ public class OrderDaoImpl implements ModelDAO<Order> {
                 while (resultSet.next()) {
                     order = new Order();
                     order.setId(resultSet.getLong("id"));
-                    order.setBook(new Book());
-// todo                    order.setBook(resultSet.getLong("book_id"));
+                    order.setBook(bookDAO.get(resultSet.getLong("book_id")).get());
                     order.setQuantity(resultSet.getInt("quantity"));
-                    order.setUser(new User());
-// todo                    order.setUser(resultSet.getInt("user_id"));
+                    order.setUser(userDAO.get(resultSet.getInt("user_id")).get());
                     order.setOrderStatus(OrderStatus.valueOf(resultSet.getString("order_status")));
                     order.setTakedDate(resultSet.getTimestamp("taked_date").toLocalDateTime().toLocalDate());
                     order.setReturnDate(resultSet.getTimestamp("return_date").toLocalDateTime().toLocalDate());
@@ -78,10 +74,9 @@ public class OrderDaoImpl implements ModelDAO<Order> {
                 Order order = new Order();
                 order.setId(resultSet.getLong("id"));
                 order.setBook(new Book());
-// todo                    order.setBook(resultSet.getLong("book_id"));
+                order.setBook(bookDAO.get(resultSet.getLong("book_id")).get());
                 order.setQuantity(resultSet.getInt("quantity"));
-                order.setUser(new User());
-// todo                    order.setUser(resultSet.getInt("user_id"));
+                order.setUser(userDAO.get(resultSet.getInt("user_id")).get());
                 order.setOrderStatus(OrderStatus.valueOf(resultSet.getString("order_status")));
                 order.setTakedDate(resultSet.getTimestamp("taked_date").toLocalDateTime().toLocalDate());
                 order.setReturnDate(resultSet.getTimestamp("return_date").toLocalDateTime().toLocalDate());

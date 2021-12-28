@@ -1,6 +1,6 @@
 package ua.olharudenko.libraryapp.dao;
 
-import ua.olharudenko.libraryapp.models.Book;
+import ua.olharudenko.libraryapp.models.Author;
 import ua.olharudenko.libraryapp.utils.DataBaseConnection;
 
 import java.sql.*;
@@ -8,18 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class BookDAOImpl implements ModelDAO<Book> {
-
-    // todo DAOException
-    // todo add logs
+public class AuthorDAOImpl implements ModelDAO<Author> {
 
     @Override
-    public Optional<Book> get(long id) throws SQLException {
-        Book book = null;
+    public Optional<Author> get(long id) throws SQLException {
+        Author author = null;
         Connection connection = null;
         PreparedStatement pstatement = null;
         ResultSet resultSet = null;
-        String sql = "select * from books  where id = ?";
+        String sql = "select * from authors  where id = ?";
         try {
             connection = DataBaseConnection.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
@@ -27,17 +24,14 @@ public class BookDAOImpl implements ModelDAO<Book> {
             if (pstatement.execute()) {
                 resultSet = pstatement.executeQuery();
                 while (resultSet.next()) {
-                    book = new Book();
-                    book.setId(resultSet.getLong("id"));
-                    book.setTitle(resultSet.getString("title"));
-                    //book.setAuthor(resultSet.getString("author"));
-                    //book.setIssuingOrganization(resultSet.getString("issuing_organization"));
-                    book.setIssueDate(resultSet.getInt("issue_date"));
-                    book.setItems(resultSet.getInt("items"));
+                    author = new Author();
+                    author.setId(resultSet.getLong("id"));
+                    author.setFullName(resultSet.getString("full_name"));
+//                    author.setPhoto(resultSet.getInt("file_reference_id")); todo create FileReference
                 }
             }
         } catch (SQLException e) {
-            throw new SQLException("BOOK NOT FOUND BY ID", e);
+            throw new SQLException("AUTHOR NOT FOUND BY ID", e);
         } finally {
             try {
                 if (resultSet != null) {
@@ -48,32 +42,29 @@ public class BookDAOImpl implements ModelDAO<Book> {
                 throw new SQLException("get: ResultSet or PreparedStatement didn't close", e);
             }
         }
-        return Optional.ofNullable(book);
+        return Optional.ofNullable(author);
     }
 
     @Override
-    public List<Book> getAll() throws SQLException {
-        List<Book> allBooks = new ArrayList<Book>();
+    public List<Author> getAll() throws SQLException {
+        List<Author> allAuthors = new ArrayList<Author>();
         Connection connection = null;
         PreparedStatement pstatement = null;
         ResultSet resultSet = null;
-        String sql = "select * from books";
+        String sql = "select * from authors";
         try {
             connection = DataBaseConnection.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             resultSet = pstatement.executeQuery();
             while (resultSet.next()) {
-                Book book = new Book();
-                book.setId(resultSet.getLong("id"));
-                book.setTitle(resultSet.getString("title"));
-                //book.setAuthor(resultSet.getString("author"));
-                //book.setIssuingOrganization(resultSet.getString("issuing_organization"));
-                book.setIssueDate(resultSet.getInt("issue_date"));
-                book.setItems(resultSet.getInt("items"));
-                allBooks.add(book);
+                Author author = new Author();
+                author.setId(resultSet.getLong("id"));
+                author.setFullName(resultSet.getString("full_name"));
+//                    author.setPhoto(resultSet.getInt("file_reference_id")); todo create FileReference
+                allAuthors.add(author);
             }
         } catch (SQLException e) {
-            throw new SQLException("BOOKS NOT FOUND", e);
+            throw new SQLException("AUTHORS NOT FOUND", e);
         } finally {
             try {
                 resultSet.close();
@@ -82,34 +73,30 @@ public class BookDAOImpl implements ModelDAO<Book> {
                 throw new SQLException("findAll(): ResultSet or PreparedStatement didn't close", e);
             }
         }
-        if (allBooks.size() == 0) {
-            throw new SQLException("table BOOKS is empty");
+        if (allAuthors.size() == 0) {
+            throw new SQLException("table AUTHORS is empty");
         }
-        return allBooks;
+        return allAuthors;
     }
 
     @Override
-    public Book save(Book book) {
+    public Author save(Author author) {
         Connection connection = null;
         PreparedStatement pstatement = null;
-        String sql = "insert into books(title, author, issuing_organization, issue_date, items) values (?, ?, ?, ?, ?)";
+        String sql = "insert into authors(full_name) values (?)";
         try {
             connection = DataBaseConnection.getInstance().getConn();
             pstatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            pstatement.setString(1, book.getTitle());
-            //pstatement.setString(2, book.getAuthor());
-            //pstatement.setString(3, book.getIssuingOrganization());
-            pstatement.setInt(4, book.getIssueDate());
-            pstatement.setInt(5, book.getItems());
+            pstatement.setString(1, author.getFullName());
 
             if (pstatement.executeUpdate() == 0) {
-                throw new SQLException("Adding book to database failed, no rows affected.");
+                throw new SQLException("Adding author to database failed, no rows affected.");
             }
             try (ResultSet generatedKeys = pstatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    book.setId(generatedKeys.getLong(1));
+                    author.setId(generatedKeys.getLong(1));
                 } else {
-                    throw new SQLException("Adding book to database failed, no ID obtained");
+                    throw new SQLException("Adding author to database failed, no ID obtained");
                 }
             }
         } catch (SQLException e) {
@@ -122,28 +109,24 @@ public class BookDAOImpl implements ModelDAO<Book> {
                 e.printStackTrace();
             }
         }
-        return book;
+        return author;
     }
 
     @Override
-    public void update(Book book) throws SQLException {
+    public void update(Author author) throws SQLException {
         Connection connection = null;
         PreparedStatement pstatement = null;
-        String sql = "UPDATE books SET title=?, author=?, issuing_organization=?, issue_date=?, items=? WHERE id =?";
+        String sql = "UPDATE authors SET full_name=? WHERE id =?";
         try {
             connection = DataBaseConnection.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
-            if (get(book.getId()) != null) {
-                pstatement.setLong(6, book.getId());
-                pstatement.setString(1, book.getTitle());
-                //pstatement.setString(2, book.getAuthor());
-                //pstatement.setString(3, book.getIssuingOrganization());
-                pstatement.setInt(4, book.getIssueDate());
-                pstatement.setInt(5, book.getItems());
+            if (get(author.getId()) != null) {
+                pstatement.setLong(2, author.getId());
+                pstatement.setString(1, author.getFullName());
                 pstatement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new SQLException("BOOK DIDN'T UPDATE");
+            throw new SQLException("AUTHOR DIDN'T UPDATE");
         } finally {
             try {
                 pstatement.close();
@@ -154,21 +137,21 @@ public class BookDAOImpl implements ModelDAO<Book> {
     }
 
     @Override
-    public void delete(Book book) throws SQLException {
+    public void delete(Author author) throws SQLException {
         Connection connection = null;
         PreparedStatement pstatement = null;
-        String sql = "delete from books where id = ?";
+        String sql = "delete from authors where id = ?";
         try {
             connection = DataBaseConnection.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
-            if (get(book.getId()) != null) {
-                pstatement.setLong(1, book.getId());
+            if (get(author.getId()) != null) {
+                pstatement.setLong(1, author.getId());
                 pstatement.executeUpdate();
             } else {
-                throw new SQLException("BOOK DIDN'T DELETE");
+                throw new SQLException("AUTHOR DIDN'T DELETE");
             }
         } catch (SQLException e) {
-            throw new SQLException("BOOK DIDN'T DELETE");
+            throw new SQLException("AUTHOR DIDN'T DELETE");
         } finally {
             try {
                 pstatement.close();

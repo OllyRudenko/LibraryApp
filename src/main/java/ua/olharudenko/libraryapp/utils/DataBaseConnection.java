@@ -14,16 +14,11 @@ public class DataBaseConnection {
     private static FileInputStream fis;
     private static Properties property = new Properties();
 
-    private DataBaseConnection() throws SQLException {
-        try {
-            fis = new FileInputStream("src/main/resources/jdbc.properties");
-            property.load(fis);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        connection = DriverManager.getConnection(property.getProperty("database.url"),
-                property.getProperty("database.user"),
-                property.getProperty("database.password"));
+    private DataBaseConnection() throws SQLException, ClassNotFoundException {
+        Class.forName("org.postgresql.Driver");
+        connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/library",
+                "admin",
+                "1");
     }
 
     public static Connection getConn() {
@@ -32,9 +27,17 @@ public class DataBaseConnection {
 
     public static DataBaseConnection getInstance() throws SQLException {
         if (instance == null) {
-            instance = new DataBaseConnection();
+            try {
+                instance = new DataBaseConnection();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         } else if (DataBaseConnection.getConn().isClosed()) {
-            instance = new DataBaseConnection();
+            try {
+                instance = new DataBaseConnection();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
         return instance;
     }
