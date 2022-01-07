@@ -6,18 +6,17 @@ import ua.olharudenko.libraryapp.dao.UserDAOImpl;
 import ua.olharudenko.libraryapp.enums.Locale;
 import ua.olharudenko.libraryapp.enums.Role;
 import ua.olharudenko.libraryapp.models.User;
-import ua.olharudenko.libraryapp.web.FrontController;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.jstl.core.Config;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Optional;
 
-public class LoginCommand extends Command{
+public class LoginCommand extends Command {
 
     private final Logger logger = LogManager.getLogger(LoginCommand.class);
 
@@ -25,17 +24,14 @@ public class LoginCommand extends Command{
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
         HttpSession session = request.getSession();
 
-        // obtain login and password from the request
-        String email = request.getParameter("email");
+        var email = request.getParameter("email");
 
-        String password = request.getParameter("password");
+        var password = request.getParameter("password");
 
         logger.info("get email and password from request");
 
-        // error handler
         String errorMessage = null;
-        String forward = "templates/error.jsp";
-
+        var forward = "templates/error.jsp";
 
         if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
             errorMessage = "Login/password cannot be empty";
@@ -52,7 +48,7 @@ public class LoginCommand extends Command{
             logger.info("errorMessage: " + errorMessage);
             return forward;
         } else {
-            Role userRole =user.get().getRole();
+            Role userRole = user.get().getRole();
 
             if (userRole == Role.ADMIN)
                 forward = "templates/user/admin_profile.jsp";
@@ -64,9 +60,11 @@ public class LoginCommand extends Command{
                 forward = "templates/user/visitor_profile.jsp";
 
             request.getSession().setAttribute("user", user.get());
+            request.getSession().setAttribute("userId", user.get().getId());
 
             request.getSession().setAttribute("userRole", userRole.toString());
-            request.getSession().setAttribute("userLocale", Locale.EN.toString());
+            Config.set(session, "javax.servlet.jsp.jstl.fmt.locale", Locale.RU.toString());
+            request.getSession().setAttribute("userLocale", Locale.RU.toString());
         }
 
         return forward;

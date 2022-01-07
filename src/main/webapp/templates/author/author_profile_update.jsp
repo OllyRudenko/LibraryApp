@@ -16,7 +16,7 @@
                     <input type="hidden" name="command" value="updateAuthorProfile"/>
                     <input type="hidden" name="authorId" value="${author.authorId}"/>
                     <input type="hidden" name="local" value="${author.local}"/>
-                    <input type="hidden" name="role" value="${user.role}"/>
+                    <input type="hidden" name="userRole" value="${user.role}"/>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control rounded-4" id="floatingInput"
                                placeholder="First name" name="fullName" value="${author.fullName}">

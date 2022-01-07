@@ -15,7 +15,7 @@
                 <form class="" method="POST" action="/libraryApp/controller">
                     <input type="hidden" name="command" value="updateUser"/>
                     <input type="hidden" name="id" value="${user.id}"/>
-                    <input type="hidden" name="role" value="${user.role}"/>
+                    <input type="hidden" name="userRole" value="${user.role}"/>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control rounded-4" id="floatingInput"
                                placeholder="First name" name="firstName" value="${user.firstName}">

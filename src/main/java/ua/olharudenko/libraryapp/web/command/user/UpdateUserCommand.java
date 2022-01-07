@@ -21,21 +21,20 @@ public class UpdateUserCommand extends Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
 
-        Long id = Long.valueOf(request.getParameter("id"));
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("lastName");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String phone = request.getParameter("phone");
-        String adress = request.getParameter("adress");
-        Role role = Role.valueOf(request.getParameter("role"));
+        var id = Long.valueOf(request.getParameter("id"));
+        var firstName = request.getParameter("firstName");
+        var lastName = request.getParameter("lastName");
+        var email = request.getParameter("email");
+        var password = request.getParameter("password");
+        var phone = request.getParameter("phone");
+        var adress = request.getParameter("adress");
+        var role = Role.valueOf(request.getParameter("userRole"));
 
-        User user = new User(firstName, lastName, role, email, password, phone, adress);
+        var user = new User(firstName, lastName, role, email, password, phone, adress);
         user.setId(id);
 
-        // error handler
         String errorMessage = null;
-        String forward = "templates/error.jsp";
+        var forward = "templates/error.jsp";
 
         new UserDAOImpl().update(user);
         Optional<User> updatedUser = new UserDAOImpl().get(id);
@@ -59,6 +58,7 @@ public class UpdateUserCommand extends Command {
 
             request.getSession().setAttribute("user", updatedUser.get());
             request.getSession().setAttribute("userLocale", Locale.EN.toString());
+            request.getSession().setAttribute("userRole", role);
         }
 
         return forward;

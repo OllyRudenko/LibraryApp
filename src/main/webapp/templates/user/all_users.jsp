@@ -26,7 +26,7 @@
                         <td>${user.firstName}</td>
                         <td>${user.lastName}</td>
                         <td>
-                            <a class="btn btn-danger" onclick="return confirm('Are you sure you want to delete?')" href="/libraryApp/controller?command=deleteUser&role=${user.role}&id=${user.id}">Delete</a>
+                            <a class="btn btn-danger" onclick="return confirm('Are you sure you want to delete?')" href="/libraryApp/controller?command=deleteUser&userRole=${user.role}&id=${user.id}">Delete</a>
                         </td>
                     </tr>
                 </c:forEach>

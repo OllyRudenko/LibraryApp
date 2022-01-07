@@ -3,7 +3,11 @@ package ua.olharudenko.libraryapp.dao;
 import ua.olharudenko.libraryapp.models.PublishingHouse;
 import ua.olharudenko.libraryapp.utils.DataBaseConnection;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -89,7 +93,7 @@ public class PublishingHouseDAOImpl implements ModelDAO<PublishingHouse> {
             connection = DataBaseConnection.getInstance().getConn();
             pstatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstatement.setString(1, publishingHouse.getEmail());
-            pstatement.setString(1, publishingHouse.getPhone());
+            pstatement.setString(2, publishingHouse.getPhone());
 
             if (pstatement.executeUpdate() == 0) {
                 throw new SQLException("Adding publishing_house to database failed, no rows affected.");

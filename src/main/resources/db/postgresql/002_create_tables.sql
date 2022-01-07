@@ -115,16 +115,17 @@ create table public.orders(
     id bigserial primary key,
     book_id bigint not null,
     foreign key (book_id) references books(id) on delete cascade on update cascade,
-    quantity integer not null,
+    quantity integer,
     user_id bigint not null,
     foreign key (user_id) references users(id) on delete cascade on update cascade,
 --    order_status order_status,
     order_status character varying(12) not null,
-    taked_date date not null,
-    return_date date not null,
+    admin_order_status character varying(12) not null,
+    taked_date date,
+    return_date date,
     bill integer,
 --    bill_status bill_status
-    bill_status character varying(6) not null
+    bill_status character varying(6)
 )
 with (
     OIDS = FALSE

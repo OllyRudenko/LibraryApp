@@ -39,7 +39,7 @@ public class FrontController extends HttpServlet {
     }
 
     /**
-     * Main method of this controller.
+     * Main method
      */
     private void process(HttpServletRequest request,
                          HttpServletResponse response) throws IOException, ServletException, SQLException {

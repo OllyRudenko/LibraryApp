@@ -4,5 +4,4 @@ public enum Locale {
     UK,
     EN,
     RU
-
-    }
+}

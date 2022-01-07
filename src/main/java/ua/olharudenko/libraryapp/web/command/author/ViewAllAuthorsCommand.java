@@ -20,7 +20,8 @@ public class ViewAllAuthorsCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        Role role = Role.valueOf(request.getParameter("role"));
+        var role = Role.valueOf(request.getParameter("userRole"));
+        var userId = Long.valueOf(request.getParameter("userId"));
 
         String errorMessage = null;
         String forward = "templates/error.jsp";
@@ -40,9 +41,14 @@ public class ViewAllAuthorsCommand extends Command {
         } else {
             request.getSession().setAttribute("authors", authors);
             request.getSession().setAttribute("userRole", role.toString());
+            request.getSession().setAttribute("userId", userId);
             request.getSession().setAttribute("userLocale", Locale.EN.toString());
 
-            forward = "templates/author/all_authors.jsp";
+            if (role.equals(Role.VISITOR)) {
+                forward = "templates/author/all_authors.jsp";
+            } else {
+                forward = "templates/author/all_authors_edit.jsp";
+            }
         }
         return forward;
     }

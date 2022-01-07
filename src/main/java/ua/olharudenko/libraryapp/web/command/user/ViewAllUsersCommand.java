@@ -20,12 +20,13 @@ public class ViewAllUsersCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        Role role = Role.valueOf(request.getParameter("role"));
+        var role = Role.valueOf(request.getParameter("userRole"));
 
         String errorMessage = null;
-        String forward = "templates/error.jsp";
+        var forward = "templates/error.jsp";
 
         List<User> users = null;
+
         try {
             users = new UserDAOImpl().getAll();
         } catch (SQLException e) {

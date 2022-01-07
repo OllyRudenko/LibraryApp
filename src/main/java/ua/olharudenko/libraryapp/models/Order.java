@@ -1,6 +1,7 @@
 package ua.olharudenko.libraryapp.models;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import ua.olharudenko.libraryapp.enums.AdminOrderStatus;
 import ua.olharudenko.libraryapp.enums.BillStatus;
 import ua.olharudenko.libraryapp.enums.OrderStatus;
 
@@ -15,25 +16,35 @@ public class Order extends BaseEntity {
 
     private User user;
 
-    private OrderStatus orderStatus = OrderStatus.UNCONFIRMED;
+    private OrderStatus orderStatus;
+
+    private AdminOrderStatus adminOrderStatus = AdminOrderStatus.UNCONFIRMED;
 
     private LocalDate takedDate;
 
     private LocalDate returnDate;
 
     private int quantity;
-    // todo change to double
-    private int bill;
 
-    private BillStatus billStatus;
+    private double bill = 0.0;
+
+    private BillStatus billStatus = BillStatus.BLANK;
 
     public Order() {
     }
 
-    public Order(Book book, User user, OrderStatus orderStatus, LocalDate takedDate, LocalDate returnDate, int quantity, int bill, BillStatus billStatus) {
+    public Order(Book book, User user, OrderStatus orderStatus, int quantity) {
         this.book = book;
         this.user = user;
         this.orderStatus = orderStatus;
+        this.quantity = quantity;
+    }
+
+    public Order(Book book, User user, OrderStatus orderStatus, AdminOrderStatus adminOrderStatus, LocalDate takedDate, LocalDate returnDate, int quantity, double bill, BillStatus billStatus) {
+        this.book = book;
+        this.user = user;
+        this.orderStatus = orderStatus;
+        this.adminOrderStatus = adminOrderStatus;
         this.takedDate = takedDate;
         this.returnDate = returnDate;
         this.quantity = quantity;
@@ -41,11 +52,12 @@ public class Order extends BaseEntity {
         this.billStatus = billStatus;
     }
 
-    public Order(Long id, Book book, User user, OrderStatus orderStatus, LocalDate takedDate, LocalDate returnDate, int quantity, int bill, BillStatus billStatus) {
+    public Order(Long id, Book book, User user, OrderStatus orderStatus, AdminOrderStatus adminOrderStatus, LocalDate takedDate, LocalDate returnDate, int quantity, double bill, BillStatus billStatus) {
         this.id = id;
         this.book = book;
         this.user = user;
         this.orderStatus = orderStatus;
+        this.adminOrderStatus = adminOrderStatus;
         this.takedDate = takedDate;
         this.returnDate = returnDate;
         this.quantity = quantity;
@@ -85,6 +97,14 @@ public class Order extends BaseEntity {
         this.orderStatus = orderStatus;
     }
 
+    public AdminOrderStatus getAdminOrderStatus() {
+        return adminOrderStatus;
+    }
+
+    public void setAdminOrderStatus(AdminOrderStatus adminOrderStatus) {
+        this.adminOrderStatus = adminOrderStatus;
+    }
+
     public LocalDate getTakedDate() {
         return takedDate;
     }
@@ -109,11 +129,11 @@ public class Order extends BaseEntity {
         this.quantity = quantity;
     }
 
-    public int getBill() {
+    public double getBill() {
         return bill;
     }
 
-    public void setBill(int bill) {
+    public void setBill(double bill) {
         this.bill = bill;
     }
 

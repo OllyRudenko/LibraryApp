@@ -1,9 +1,14 @@
 package ua.olharudenko.libraryapp.dao;
 
+import ua.olharudenko.libraryapp.enums.Locale;
 import ua.olharudenko.libraryapp.models.Book;
 import ua.olharudenko.libraryapp.utils.DataBaseConnection;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,8 +35,11 @@ public class BookDAOImpl implements ModelDAO<Book> {
                     book = new Book();
                     book.setId(resultSet.getLong("id"));
                     book.setTitle(resultSet.getString("title"));
-                    //book.setAuthor(resultSet.getString("author"));
-                    //book.setIssuingOrganization(resultSet.getString("issuing_organization"));
+                    book.setDescription(resultSet.getString("description"));
+                    Locale locale = Locale.valueOf(resultSet.getString("publish_locale"));
+                    book.setPublish_locale(locale);
+                    book.setLocalizedAuthor(new LocalizedAuthorDAOImpl().get(resultSet.getLong("author_id"), locale).get());
+                    book.setPublish_house_id(resultSet.getLong("publish_house_id"));
                     book.setIssueDate(resultSet.getInt("issue_date"));
                     book.setItems(resultSet.getInt("items"));
                 }
@@ -66,8 +74,11 @@ public class BookDAOImpl implements ModelDAO<Book> {
                 Book book = new Book();
                 book.setId(resultSet.getLong("id"));
                 book.setTitle(resultSet.getString("title"));
-                //book.setAuthor(resultSet.getString("author"));
-                //book.setIssuingOrganization(resultSet.getString("issuing_organization"));
+                book.setDescription(resultSet.getString("description"));
+                Locale locale = Locale.valueOf(resultSet.getString("publish_locale"));
+                book.setPublish_locale(locale);
+                book.setLocalizedAuthor(new LocalizedAuthorDAOImpl().get(resultSet.getLong("author_id"), locale).get());
+                book.setPublish_house_id(resultSet.getLong("publish_house_id"));
                 book.setIssueDate(resultSet.getInt("issue_date"));
                 book.setItems(resultSet.getInt("items"));
                 allBooks.add(book);
@@ -97,6 +108,7 @@ public class BookDAOImpl implements ModelDAO<Book> {
             connection = DataBaseConnection.getInstance().getConn();
             pstatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstatement.setString(1, book.getTitle());
+            // todo book
             //pstatement.setString(2, book.getAuthor());
             //pstatement.setString(3, book.getIssuingOrganization());
             pstatement.setInt(4, book.getIssueDate());
@@ -176,5 +188,46 @@ public class BookDAOImpl implements ModelDAO<Book> {
                 throw new SQLException("delete: PreparedStatement didn't close", e);
             }
         }
+    }
+
+    public List<Book> getAllBooksByAuthor(Long id) throws SQLException {
+        List<Book> allBooks = new ArrayList<Book>();
+        Connection connection = null;
+        PreparedStatement pstatement = null;
+        ResultSet resultSet = null;
+        String sql = "select * from books where author_id=?";
+        try {
+            connection = DataBaseConnection.getInstance().getConn();
+            pstatement = connection.prepareStatement(sql);
+            pstatement.setLong(1, id);
+            resultSet = pstatement.executeQuery();
+            while (resultSet.next()) {
+                Book book = new Book();
+                book.setId(resultSet.getLong("id"));
+                book.setTitle(resultSet.getString("title"));
+                book.setDescription(resultSet.getString("description"));
+                Locale locale = Locale.valueOf(resultSet.getString("publish_locale"));
+                book.setPublish_locale(locale);
+                book.setLocalizedAuthor(new LocalizedAuthorDAOImpl().get(resultSet.getLong("author_id"), locale).get());
+                book.setPublish_house_id(resultSet.getLong("publish_house_id"));
+                book.setIssueDate(resultSet.getInt("issue_date"));
+                book.setItems(resultSet.getInt("items"));
+                allBooks.add(book);
+            }
+        } catch (SQLException e) {
+            throw new SQLException("BOOKS NOT FOUND", e);
+        } finally {
+            try {
+                resultSet.close();
+                pstatement.close();
+            } catch (SQLException e) {
+                throw new SQLException("findAll(): ResultSet or PreparedStatement didn't close", e);
+            }
+        }
+        if (allBooks.size() == 0) {
+            return allBooks;
+            //logger.info("table BOOKS is empty");
+        }
+        return allBooks;
     }
 }

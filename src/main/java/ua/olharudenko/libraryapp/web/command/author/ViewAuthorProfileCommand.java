@@ -4,7 +4,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.olharudenko.libraryapp.dao.LocalizedAuthorDAOImpl;
 import ua.olharudenko.libraryapp.enums.Locale;
+import ua.olharudenko.libraryapp.enums.Role;
+import ua.olharudenko.libraryapp.models.Book;
 import ua.olharudenko.libraryapp.models.LocalizedAuthor;
+import ua.olharudenko.libraryapp.service.impl.BookServiceImpl;
 import ua.olharudenko.libraryapp.web.command.Command;
 
 import javax.servlet.ServletException;
@@ -12,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 public class ViewAuthorProfileCommand extends Command {
@@ -19,8 +23,10 @@ public class ViewAuthorProfileCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
-        Long authorId = Long.valueOf(request.getParameter("id"));
-        Locale local = Locale.valueOf(request.getParameter("locale"));
+        var authorId = Long.valueOf(request.getParameter("id"));
+        var local = Locale.valueOf(request.getParameter("locale"));
+        var userId = Long.valueOf(request.getParameter("userId"));
+        var userRole = Role.valueOf(request.getParameter("userRole"));
 
         String errorMessage = null;
         String forward = "templates/error.jsp";
@@ -33,9 +39,18 @@ public class ViewAuthorProfileCommand extends Command {
             logger.info("errorMessage: " + errorMessage);
             return forward;
         }
-
+        List<Book> books = new BookServiceImpl().getAllBooksByAuthor(author.get().getAuthorId());
+        if(books.size() != 0){
+            request.getSession().setAttribute("books", books);
+        }
         request.getSession().setAttribute("author", author.get());
-        forward = "templates/author/author_profile.jsp";
+        request.getSession().setAttribute("userId", userId);
+        request.getSession().setAttribute("userRole", userRole.toString());
+        if(userRole.equals(Role.VISITOR)) {
+            forward = "templates/author/author_profile.jsp";
+        }else{
+            forward = "templates/author/author_profile_edit.jsp";
+        }
 
         return forward;
     }

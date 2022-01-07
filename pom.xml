@@ -86,6 +86,13 @@
             <version>2.13.3</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.googlecode.i18n-maven-plugin/i18n-maven-plugin -->
+        <dependency>
+            <groupId>com.googlecode.i18n-maven-plugin</groupId>
+            <artifactId>i18n-maven-plugin</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
     </dependencies>
 
 
@@ -101,10 +108,16 @@
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>3.0.2</version>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.8.0</version>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
@@ -131,6 +144,7 @@
                 <configuration>
                     <source>11</source>
                     <target>11</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
             <plugin>

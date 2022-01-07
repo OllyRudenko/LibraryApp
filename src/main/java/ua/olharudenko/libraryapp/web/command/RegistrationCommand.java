@@ -22,20 +22,19 @@ public class RegistrationCommand extends Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
         HttpSession session = request.getSession();
 
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("lastName");
-        String email = request.getParameter("email");
-        String password = request.getParameter("pwd1");
-        String phone = request.getParameter("phone");
-        String adress = request.getParameter("adress");
+        var firstName = request.getParameter("firstName");
+        var lastName = request.getParameter("lastName");
+        var email = request.getParameter("email");
+        var password = request.getParameter("pwd1");
+        var phone = request.getParameter("phone");
+        var adress = request.getParameter("adress");
 
-        User user = new User(firstName, lastName, Role.VISITOR, email, password, phone, adress);
+        var user = new User(firstName, lastName, Role.VISITOR, email, password, phone, adress);
 
-        // error handler
         String errorMessage = null;
-        String forward = "templates/error.jsp";
+        var forward = "templates/error.jsp";
 
-        User registeredUser = new UserDAOImpl().save(user);
+        var registeredUser = new UserDAOImpl().save(user);
 
         if (registeredUser == null) {
             errorMessage = "Cannot registered user, please try againe";
@@ -43,10 +42,11 @@ public class RegistrationCommand extends Command {
             logger.info("errorMessage: " + errorMessage);
             return forward;
         } else {
-            Role userRole =registeredUser.getRole();
+            var userRole = registeredUser.getRole();
 
-            if (userRole == Role.VISITOR)
+            if (userRole == Role.VISITOR) {
                 forward = "templates/user/visitor_profile.jsp";
+            }
 
             request.getSession().setAttribute("user", registeredUser);
             request.getSession().setAttribute("userLocale", Locale.EN.toString());

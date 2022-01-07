@@ -19,10 +19,10 @@ public class UpdateAuthorProfileCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
-        Long authorId = Long.valueOf(request.getParameter("authorId"));
-        Locale local = Locale.valueOf(request.getParameter("local"));
-        String fullName = request.getParameter("fullName");
-        String biografy = request.getParameter("biografy");
+        var authorId = Long.valueOf(request.getParameter("authorId"));
+        var local = Locale.valueOf(request.getParameter("local"));
+        var fullName = request.getParameter("fullName");
+        var biografy = request.getParameter("biografy");
 
         String errorMessage = null;
         String forward = "templates/error.jsp";

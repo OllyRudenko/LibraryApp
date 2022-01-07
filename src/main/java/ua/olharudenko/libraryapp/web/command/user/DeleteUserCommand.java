@@ -19,11 +19,11 @@ public class DeleteUserCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
-        var role = Role.valueOf(request.getParameter("role"));
+        var role = Role.valueOf(request.getParameter("userRole"));
         var id = Long.valueOf(request.getParameter("id"));
 
         String errorMessage = "DELETING FAILED";
-        String forward = "templates/error.jsp";
+        var forward = "templates/error.jsp";
 
         Optional<User> userForDelete = new UserDAOImpl().get(id);
         if (!userForDelete.isEmpty()) {

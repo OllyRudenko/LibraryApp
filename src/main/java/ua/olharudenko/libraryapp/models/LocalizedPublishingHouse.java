@@ -20,6 +20,13 @@ public class LocalizedPublishingHouse {
     public LocalizedPublishingHouse() {
     }
 
+    public LocalizedPublishingHouse(Locale locale, String city, String adress, String nameHouse) {
+        this.locale = locale;
+        this.city = city;
+        this.adress = adress;
+        this.nameHouse = nameHouse;
+    }
+
     public LocalizedPublishingHouse(Locale locale, Long publishingHouseId, String city, String adress, String nameHouse) {
         this.locale = locale;
         this.publishingHouseId = publishingHouseId;

@@ -19,7 +19,7 @@ public class LocalizedPublishingHouseDAOImpl implements LocalizedModelDAO<Locali
         Connection connection = null;
         PreparedStatement pstatement = null;
         ResultSet resultSet = null;
-        String sql = "select * from localized_publishing_houses  where author_id = ? and locale = ?";
+        String sql = "select * from localized_publishing_houses where publishing_house_id = ? and locale = ?";
         var publishHouse = new PublishingHouseDAOImpl().get(id);
         try {
             connection = DataBaseConnection.getInstance().getConn();
@@ -126,6 +126,27 @@ public class LocalizedPublishingHouseDAOImpl implements LocalizedModelDAO<Locali
 
     @Override
     public void delete(LocalizedPublishingHouse localizedPublishingHouse) throws SQLException {
-
+        Connection connection = null;
+        PreparedStatement pstatement = null;
+        String sql = "delete from localized_publishing_houses where publishing_house_id = ? and locale = ?";
+        try {
+            connection = DataBaseConnection.getInstance().getConn();
+            pstatement = connection.prepareStatement(sql);
+            if (this.get(localizedPublishingHouse.getPublishingHouseId(), localizedPublishingHouse.getLocale()) != null) {
+                pstatement.setLong(1, localizedPublishingHouse.getPublishingHouseId());
+                pstatement.setString(2, localizedPublishingHouse.getLocale().toString());
+                pstatement.executeUpdate();
+            } else {
+                throw new SQLException("LOCALIZED PUBLISHING HOUSE DIDN'T DELETE");
+            }
+        } catch (SQLException e) {
+            throw new SQLException("LOCALIZED PUBLISHING HOUSE DIDN'T DELETE");
+        } finally {
+            try {
+                pstatement.close();
+            } catch (SQLException e) {
+                throw new SQLException("delete: PreparedStatement didn't close", e);
+            }
+        }
     }
 }

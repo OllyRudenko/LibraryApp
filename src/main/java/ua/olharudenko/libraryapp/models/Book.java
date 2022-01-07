@@ -11,7 +11,7 @@ public class Book extends BaseEntity {
 
     private String title;
 
-    private Author author;
+    private LocalizedAuthor author;
 
     private String description;
 
@@ -26,7 +26,7 @@ public class Book extends BaseEntity {
     public Book() {
     }
 
-    public Book(String title, Author author, String description, Locale publish_locale, Long publish_house_id, int issueDate, int items) {
+    public Book(String title, LocalizedAuthor author, String description, Locale publish_locale, Long publish_house_id, int issueDate, int items) {
         this.title = title;
         this.author = author;
         this.description = description;
@@ -36,7 +36,7 @@ public class Book extends BaseEntity {
         this.items = items;
     }
 
-    public Book(Long id, String title, Author author, String description, Locale publish_locale, Long publish_house_id, int issueDate, int items) {
+    public Book(Long id, String title, LocalizedAuthor author, String description, Locale publish_locale, Long publish_house_id, int issueDate, int items) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -63,11 +63,11 @@ public class Book extends BaseEntity {
         this.title = title;
     }
 
-    public Author getAuthor() {
+    public LocalizedAuthor getLocalizedAuthor() {
         return author;
     }
 
-    public void setAuthor(Author author) {
+    public void setLocalizedAuthor(LocalizedAuthor author) {
         this.author = author;
     }
 

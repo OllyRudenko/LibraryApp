@@ -6,7 +6,6 @@ import javax.servlet.ServletContextListener;
 
 public class ContextListener implements ServletContextListener {
 
-
     public void contextDestroyed(ServletContextEvent event) {
     }
 
@@ -16,16 +15,10 @@ public class ContextListener implements ServletContextListener {
         ServletContext servletContext = event.getServletContext();
         initCommandContainer();
 
-
         log("Servlet context initialization finished");
     }
 
-
-
     private void initCommandContainer() {
-
-        // initialize commands container
-        // just load class to JVM
         try {
             Class.forName("ua.olharudenko.libraryapp.web.command.CommandContainer");
         } catch (ClassNotFoundException ex) {
