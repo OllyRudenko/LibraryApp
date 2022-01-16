@@ -1,8 +1,10 @@
 package ua.olharudenko.libraryapp.models;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class BaseEntity {
+public class BaseEntity implements Serializable {
+
     protected LocalDateTime createdDate;
 
     protected LocalDateTime updatedDate;

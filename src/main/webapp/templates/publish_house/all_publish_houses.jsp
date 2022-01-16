@@ -12,6 +12,7 @@
 </head>
     <body>
     <% String userRole = (String) request.getSession().getAttribute("userRole"); %>
+    <% Long userId = (Long) request.getSession().getAttribute("userId"); %>
     <div class="container">
 
     	<input type="hidden" name="userId" value="${userId}"/>
@@ -29,7 +30,7 @@
             <tbody>
                 <c:forEach items="${publishing_houses}" var="publishing_house">
                     <tr>
-                        <td><a class="btn btn-danger" href="/libraryApp/controller?command=viewHouseProfile&id=${publishing_house.publishingHouseId}&userRole=${userRole}">
+                        <td><a class="btn btn-danger" href="/libraryApp/controller?command=viewHouseProfile&id=${publishing_house.publishingHouseId}">
                         ${publish_house.nameHouse}
                         </a></td>
                         <td>${publish_house.city}</td>

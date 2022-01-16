@@ -13,36 +13,71 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddNewAuthorCommand extends Command {
     private final Logger logger = LogManager.getLogger(AddNewAuthorCommand.class);
 
+    LocalizedAuthorDAOImpl localizedAuthorDAO = new LocalizedAuthorDAOImpl();
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
-        var userRole = Role.valueOf(request.getParameter("userRole"));
-        var fullName = request.getParameter("fullName");
-        var biografy = request.getParameter("biografy");
-        var local = Locale.valueOf(request.getParameter("local"));
+        Role userRole = Role.valueOf((String) request.getSession().getAttribute("userRole"));
+//        Locale local = Locale.valueOf(request.getParameter("local"));
 
         String errorMessage = null;
         String forward = "templates/error.jsp";
 
         var author = new LocalizedAuthor();
+        var savedAuthor = new LocalizedAuthor();
 
         if (userRole == Role.ADMIN || userRole == Role.LIBRARIAN) {
-            author = new LocalizedAuthorDAOImpl().save(new LocalizedAuthor(fullName, local, biografy, null));
-            if (author == null) {
-                errorMessage = "Cannot add author, please try againe";
-                request.getSession().setAttribute("errorMessage", errorMessage);
-                logger.info("errorMessage: " + errorMessage);
-                return forward;
+            Map<String, String> errors = new HashMap<>();
+            validationLocalizedAuthorFields(request, errors, author);
+
+            if (!errors.isEmpty()) {
+                request.setAttribute("author", author);
+                request.setAttribute("errors", errors);
+                forward = "templates/author/all_authors_edit.jsp";
+            } else {
+                savedAuthor = localizedAuthorDAO.save(author);
+                if (savedAuthor == null) {
+                    errorMessage = "Cannot add author, please try againe";
+                    request.getSession().setAttribute("errorMessage", errorMessage);
+                    logger.info("errorMessage: " + errorMessage);
+                    return forward;
+                }
+
+                request.getSession().setAttribute("author", savedAuthor);
+                request.getSession().setAttribute("userRole", userRole.toString());
+                request.getSession().setAttribute("userLocale", Locale.EN.toString());
+                forward = "templates/author/author_profile_edit.jsp";
             }
         }
-        request.getSession().setAttribute("author", author);
-        request.getSession().setAttribute("userRole", userRole.toString());
-        request.getSession().setAttribute("userLocale", Locale.EN.toString());
-        forward = "templates/author/author_profile_edit.jsp";
-
         return forward;
+    }
+
+    private void validationLocalizedAuthorFields(HttpServletRequest request, Map<String, String> errors, LocalizedAuthor author) {
+        var fullName = request.getParameter("fullName");
+        if (fullName.length() == 0) {
+            errors.put("fullName", "Full Name cannot be blank and should be less than 200 simbols");
+        } else {
+            author.setFullName(fullName);
+        }
+
+        var biografy = request.getParameter("biografy");
+        if (biografy.length() == 0) {
+            errors.put("biografy", "Biography cannot be blank and should be less than 1200 simbols");
+        } else {
+            author.setBiografy(biografy);
+        }
+
+        var local = request.getParameter("local");
+        if (local.length() == 0) {
+            errors.put("local", "Locale cannot be blank");
+        } else {
+            author.setLocal(Locale.valueOf(local));
+        }
     }
 }

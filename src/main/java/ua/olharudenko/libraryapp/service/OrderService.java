@@ -15,5 +15,5 @@ public interface OrderService {
 
     public List<Order> getAllOrders(Long userId, Role role) throws SQLException;
 
-    Boolean delete(Order order, Long userId) throws SQLException;
+    Boolean delete(Order order, Role userRole) throws SQLException;
 }

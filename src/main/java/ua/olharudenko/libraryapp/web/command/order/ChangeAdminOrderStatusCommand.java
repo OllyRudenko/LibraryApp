@@ -25,8 +25,8 @@ public class ChangeAdminOrderStatusCommand extends Command {
         var orderService = new OrderServiceImpl();
 
         List<Long> orderIds = converver(request.getParameterValues("id"));
-        var userId = Long.valueOf(request.getParameter("userId"));
-        var userRole = Role.valueOf(request.getParameter("userRole"));
+        Long userId = (Long)request.getSession().getAttribute("userId");
+        Role userRole = Role.valueOf((String) request.getSession().getAttribute("userRole"));
 
         String errorMessage = null;
         String forward = "templates/error.jsp";

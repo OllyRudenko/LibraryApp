@@ -49,7 +49,7 @@
 					<c:forEach items="${books}" var="book">
 						<tr>
 							<td>${book.title}</td>
-							<td>${book.publish_locale}</td>
+							<td>${book.publishLocale}</td>
 							<td><input type="checkbox" name="id" value="${book.id}"/></td>
 						</tr>
 					</c:forEach>

@@ -5,7 +5,7 @@ import ua.olharudenko.libraryapp.enums.BillStatus;
 import ua.olharudenko.libraryapp.enums.OrderStatus;
 import ua.olharudenko.libraryapp.models.Book;
 import ua.olharudenko.libraryapp.models.Order;
-import ua.olharudenko.libraryapp.utils.DataBaseConnection;
+import ua.olharudenko.libraryapp.utils.ConnectionPool;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -31,7 +31,7 @@ public class OrderDaoImpl implements ModelDAO<Order> {
         ResultSet resultSet = null;
         String sql = "select * from orders  where id = ?";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             pstatement.setLong(1, id);
             if (pstatement.execute()) {
@@ -76,7 +76,7 @@ public class OrderDaoImpl implements ModelDAO<Order> {
         ResultSet resultSet = null;
         String sql = "select * from orders";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             resultSet = pstatement.executeQuery();
             while (resultSet.next()) {
@@ -106,9 +106,6 @@ public class OrderDaoImpl implements ModelDAO<Order> {
                 throw new SQLException("findAll(): ResultSet or PreparedStatement didn't close", e);
             }
         }
-        if (allOrders.size() == 0) {
-            throw new SQLException("table ORDERS is empty");
-        }
         return allOrders;
     }
 
@@ -118,7 +115,7 @@ public class OrderDaoImpl implements ModelDAO<Order> {
         PreparedStatement pstatement = null;
         String sql = "insert into orders(book_id, user_id, order_status, admin_order_status, quantity, bill, bill_status, taked_date, return_date) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstatement.setLong(1, order.getBook().getId());
             pstatement.setLong(2, order.getUser().getId());
@@ -146,7 +143,6 @@ public class OrderDaoImpl implements ModelDAO<Order> {
         } finally {
             try {
                 pstatement.close();
-                connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -159,7 +155,7 @@ public class OrderDaoImpl implements ModelDAO<Order> {
         PreparedStatement pstatement = null;
         String sql = "insert into orders(book_id, user_id, order_status, admin_order_status, quantity, bill, bill_status) values (?, ?, ?, ?, ?, ?, ?)";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstatement.setLong(1, order.getBook().getId());
             pstatement.setLong(2, order.getUser().getId());
@@ -183,7 +179,6 @@ public class OrderDaoImpl implements ModelDAO<Order> {
         } finally {
             try {
                 pstatement.close();
-                connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -197,7 +192,7 @@ public class OrderDaoImpl implements ModelDAO<Order> {
         PreparedStatement pstatement = null;
         String sql = "UPDATE orders SET book_id=?, quantity=?, user_id=?, order_status=?, admin_order_status=?, bill=?, bill_status=?, taked_date=?, return_date=? WHERE id =?";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             if (get(order.getId()) != null) {
                 pstatement.setLong(10, order.getId());
@@ -231,7 +226,7 @@ public class OrderDaoImpl implements ModelDAO<Order> {
         PreparedStatement pstatement = null;
         String sql = "delete from orders where id = ?";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             if (get(order.getId()) != null) {
                 pstatement.setLong(1, order.getId());
@@ -258,7 +253,7 @@ public class OrderDaoImpl implements ModelDAO<Order> {
         ResultSet resultSet = null;
         String sql = "select * from orders where user_id = ?";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             pstatement.setLong(1, id);
             resultSet = pstatement.executeQuery();

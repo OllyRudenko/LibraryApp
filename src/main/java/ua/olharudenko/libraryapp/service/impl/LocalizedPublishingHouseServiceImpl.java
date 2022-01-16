@@ -16,6 +16,7 @@ public class LocalizedPublishingHouseServiceImpl implements LocalizedPublishingH
 
     LocalizedPublishingHouseDAOImpl localizedPublishingHouseDAO = new LocalizedPublishingHouseDAOImpl();
     PublishingHouseDAOImpl publishingHouseDAO = new PublishingHouseDAOImpl();
+    PublishingHouseServiceImpl publishingHouseService = new PublishingHouseServiceImpl();
 
     @Override
     public List<LocalizedPublishingHouse> getAll() {
@@ -50,7 +51,10 @@ public class LocalizedPublishingHouseServiceImpl implements LocalizedPublishingH
     @Override
     public void remove(LocalizedPublishingHouse house){
         try {
-            localizedPublishingHouseDAO.delete(house);
+            Optional<PublishingHouse> publishingHouse = publishingHouseDAO.get(house.getPublishingHouseId());
+            if(publishingHouse.isPresent()) {
+                publishingHouseService.remove(publishingHouse.get());
+            }
             // todo found - is other locales in PublishingHouse
         } catch (SQLException e) {
             e.printStackTrace();

@@ -13,7 +13,7 @@ public class LocalizedAuthor extends BaseEntity {
 
     private Locale local;
 
-    private String biografy;
+    private String biografy; //todo biography
 
     private FileReference photo;
 

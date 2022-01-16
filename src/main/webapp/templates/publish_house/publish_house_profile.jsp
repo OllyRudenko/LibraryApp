@@ -10,6 +10,7 @@
 <body>
 <br>
 <% String loc = (String) request.getSession().getAttribute("userLocale"); %>
+<% Long userId = (Long) request.getSession().getAttribute("userId"); %>
 
 <input type="hidden" name="locale" value="local"/>
 <input type="hidden" id="locale" th:field="*{locale}" th:value="${loc}"/>

@@ -16,6 +16,7 @@
     <% String userRole = (String) request.getSession().getAttribute("userRole"); %>
     <% Long userId = (Long) request.getSession().getAttribute("userId"); %>
     <div class="container">
+    <input type="hidden" name="userRole" value="${userRole}"/>
 
     <form id="make_order" action="controller" method="post">
 
@@ -38,10 +39,10 @@
             <tbody>
                 <c:forEach items="${books}" var="book">
                     <tr>
-                        <td><a class="btn btn-danger" href="/libraryApp/controller?command=viewBookProfile&id=${book.id}&userRole=${userRole}">
+                        <td><a class="btn btn-danger" href="/libraryApp/controller?command=viewBookProfile&id=${book.id}">
                         ${book.title}
                         </a></td>
-                        <td><a class="btn btn-danger" href="/libraryApp/controller?command=viewAuthorProfile&id=${book.getLocalizedAuthor().authorId}&locale=${book.publish_locale}&userId=${userId}&userRole=${userRole}">
+                        <td><a class="btn btn-danger" href="/libraryApp/controller?command=viewAuthorProfile&id=${book.getLocalizedAuthor().authorId}&locale=${book.publishLocale}">
                         ${book.getLocalizedAuthor().fullName}</a>
                         </td>
                         <td>${book.description}</td>

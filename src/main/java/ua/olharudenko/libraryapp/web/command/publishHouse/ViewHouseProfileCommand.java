@@ -22,7 +22,7 @@ public class ViewHouseProfileCommand extends Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
         var id = Long.valueOf(request.getParameter("id"));
-        var role = Role.valueOf(request.getParameter("userRole"));
+        Role userRole = Role.valueOf((String) request.getSession().getAttribute("userRole"));
         var locale = Locale.valueOf(request.getParameter("locale"));
 
         String errorMessage = null;
@@ -38,10 +38,10 @@ public class ViewHouseProfileCommand extends Command {
         }
 
         request.getSession().setAttribute("publishing_house", localizedPublishingHouse.get());
-        request.getSession().setAttribute("userRole", role);
-        if (role.equals(Role.VISITOR))
+        request.getSession().setAttribute("userRole", userRole.toString());
+        if (userRole.equals(Role.VISITOR))
             forward = "templates/publish_house/publish_house_profile.jsp";
-        if (role.equals(Role.ADMIN) || role.equals(Role.LIBRARIAN))
+        if (userRole.equals(Role.ADMIN) || userRole.equals(Role.LIBRARIAN))
             forward = "templates/publish_house/publish_house_profile.jsp";
 
         return forward;

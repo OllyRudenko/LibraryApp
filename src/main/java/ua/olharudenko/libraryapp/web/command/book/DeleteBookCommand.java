@@ -20,9 +20,9 @@ public class DeleteBookCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
-        var role = Role.valueOf(request.getParameter("userRole"));
+        Role role = Role.valueOf((String) request.getSession().getAttribute("userRole"));
         var id = Long.valueOf(request.getParameter("id"));
-        var local = Locale.valueOf(request.getParameter("local"));
+        var locale = Locale.valueOf(request.getParameter("locale"));
 
         String errorMessage = "DELETING FAILED";
         String forward = "templates/error.jsp";
@@ -31,9 +31,11 @@ public class DeleteBookCommand extends Command {
             Optional<Book> bookForDelete = new BookDAOImpl().get(id);
             if (!bookForDelete.isEmpty()) {
                 new BookDAOImpl().delete(bookForDelete.get());
-                request.getSession().setAttribute("userRole", role);
-                forward = "/controller?command=viewAllBooks&role=".concat(role.name());
+                request.getSession().setAttribute("userRole", role.toString());
+                forward = "/controller?command=viewAllBooks";
             }
+        }else{
+            request.getSession().setAttribute("errorMessage", errorMessage);
         }
         return forward;
     }

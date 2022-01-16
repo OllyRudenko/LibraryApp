@@ -6,6 +6,7 @@ import ua.olharudenko.libraryapp.service.BookService;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public class BookServiceImpl implements BookService {
     BookDAOImpl bookDAO = new BookDAOImpl();
@@ -18,5 +19,11 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> getAllBooksByAuthor(Long authorId) throws SQLException {
         return bookDAO.getAllBooksByAuthor(authorId);
+    }
+
+    @Override
+    public Book save(Book book){
+        Book savedBook = bookDAO.save(book);
+        return savedBook;
     }
 }

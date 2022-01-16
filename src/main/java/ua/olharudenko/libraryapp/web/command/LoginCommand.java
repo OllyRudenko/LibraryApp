@@ -5,7 +5,9 @@ import org.apache.logging.log4j.Logger;
 import ua.olharudenko.libraryapp.dao.UserDAOImpl;
 import ua.olharudenko.libraryapp.enums.Locale;
 import ua.olharudenko.libraryapp.enums.Role;
+import ua.olharudenko.libraryapp.models.Order;
 import ua.olharudenko.libraryapp.models.User;
+import ua.olharudenko.libraryapp.service.impl.OrderServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 public class LoginCommand extends Command {
@@ -56,8 +59,10 @@ public class LoginCommand extends Command {
             if (userRole == Role.LIBRARIAN)
                 forward = "templates/user/librarian_profile.jsp";
 
-            if (userRole == Role.VISITOR)
+            if (userRole == Role.VISITOR) {
+                getAllVisitorOrders(user.get().getId(), userRole, request);
                 forward = "templates/user/visitor_profile.jsp";
+            }
 
             request.getSession().setAttribute("user", user.get());
             request.getSession().setAttribute("userId", user.get().getId());
@@ -68,6 +73,19 @@ public class LoginCommand extends Command {
         }
 
         return forward;
+    }
+
+    private List<Order> getAllVisitorOrders(Long userId, Role userRole, HttpServletRequest request) throws SQLException {
+        List<Order> orders = new OrderServiceImpl().getAllOrders(userId, userRole);
+
+        if (!(orders.size() == 0)) {
+            request.getSession().setAttribute("orders", orders);
+            request.getSession().setAttribute("userRole", userRole.toString());
+            request.getSession().setAttribute("userId", userId);
+            request.getSession().setAttribute("userLocale", Locale.EN.toString());
+            }
+
+        return orders;
     }
 }
 

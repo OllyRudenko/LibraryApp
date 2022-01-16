@@ -20,8 +20,8 @@ public class ViewAllPublishHousesCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
-        var userId = Long.valueOf(request.getParameter("userId"));
-        var userRole = Role.valueOf(request.getParameter("userRole"));
+        Long userId = (Long)request.getSession().getAttribute("userId");
+        Role userRole = Role.valueOf((String) request.getSession().getAttribute("userRole"));
 
         String errorMessage = null;
         var forward = "templates/error.jsp";

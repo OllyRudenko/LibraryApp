@@ -3,7 +3,7 @@ package ua.olharudenko.libraryapp.dao;
 import ua.olharudenko.libraryapp.enums.Locale;
 import ua.olharudenko.libraryapp.models.Author;
 import ua.olharudenko.libraryapp.models.LocalizedAuthor;
-import ua.olharudenko.libraryapp.utils.DataBaseConnection;
+import ua.olharudenko.libraryapp.utils.ConnectionPool;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,7 +23,7 @@ public class LocalizedAuthorDAOImpl implements LocalizedModelDAO<LocalizedAuthor
         ResultSet resultSet = null;
         String sql = "select * from localized_authors  where author_id = ? and locale = ?";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             pstatement.setLong(1, id);
             pstatement.setString(2, locale.toString());
@@ -61,7 +61,7 @@ public class LocalizedAuthorDAOImpl implements LocalizedModelDAO<LocalizedAuthor
         ResultSet resultSet = null;
         String sql = "select * from localized_authors";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             resultSet = pstatement.executeQuery();
             while (resultSet.next()) {
@@ -96,7 +96,7 @@ public class LocalizedAuthorDAOImpl implements LocalizedModelDAO<LocalizedAuthor
         var author = new AuthorDAOImpl().save(new Author(localizedAuthor.getFullName(), null));
         localizedAuthor.setAuthorId(author.getId());
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
 
             pstatement.setLong(1, localizedAuthor.getAuthorId());
@@ -112,7 +112,6 @@ public class LocalizedAuthorDAOImpl implements LocalizedModelDAO<LocalizedAuthor
         } finally {
             try {
                 pstatement.close();
-                connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -126,7 +125,7 @@ public class LocalizedAuthorDAOImpl implements LocalizedModelDAO<LocalizedAuthor
         PreparedStatement pstatement = null;
         String sql = "UPDATE localized_authors SET full_name=?, biografy=? WHERE author_id = ? and locale = ?";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             if (this.get(localizedAuthor.getAuthorId(), localizedAuthor.getLocal()) != null) {
                 pstatement.setLong(3, localizedAuthor.getAuthorId());
@@ -152,7 +151,7 @@ public class LocalizedAuthorDAOImpl implements LocalizedModelDAO<LocalizedAuthor
         PreparedStatement pstatement = null;
         String sql = "delete from localized_authors where author_id = ? and locale = ?";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             if (this.get(localizedAuthor.getAuthorId(), localizedAuthor.getLocal()) != null) {
                 pstatement.setLong(1, localizedAuthor.getAuthorId());

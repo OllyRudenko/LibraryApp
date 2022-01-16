@@ -13,6 +13,7 @@ import ua.olharudenko.libraryapp.web.command.Command;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -23,10 +24,11 @@ public class ViewAuthorProfileCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
-        var authorId = Long.valueOf(request.getParameter("id"));
-        var local = Locale.valueOf(request.getParameter("locale"));
-        var userId = Long.valueOf(request.getParameter("userId"));
-        var userRole = Role.valueOf(request.getParameter("userRole"));
+        HttpSession session = request.getSession();
+        Long authorId = Long.valueOf(request.getParameter("id"));
+        Locale local = Locale.valueOf(request.getParameter("locale"));
+        Long userId = (Long) session.getAttribute("userId");
+        Role userRole = Role.valueOf((String) session.getAttribute("userRole"));
 
         String errorMessage = null;
         String forward = "templates/error.jsp";

@@ -35,9 +35,6 @@
 <% String loc = (String) request.getSession().getAttribute("userLocale"); %>
 <% Long userId = (Long) request.getSession().getAttribute("userId"); %>
 
-<input type="hidden" name="locale" value="${loc}"/>
-<input type="hidden" id="locale" th:field="*{locale}" th:value="${loc}"/>
-
 
 <jsp:useBean id="user" class="ua.olharudenko.libraryapp.models.User" scope="session"></jsp:useBean>
 <jsp:setProperty property="*" name="user"/>
@@ -57,6 +54,7 @@
 </h1>
 <br><br>
 <a href="templates/user/visitor_profile_update.jsp">update</a>
+<a href="/libraryApp/controller?command=logout">logout</a>
     </section>
         </div>
 </div>
@@ -64,14 +62,14 @@
 <div>
 <table><tr>
 <td>
-<form class="" action="/libraryApp/controller" method="get">
+<form class="" action="/libraryApp/controller" method="post">
 <input type="hidden" name="command" value="viewAllUsers"/>
 <input type="hidden" name="userRole" value="${user.getRole().toString()}"/>
 <button class="w-100 mb-2 btn btn-lg rounded-4 btn-primary" type="submit">all users</button>
 </form>
 </td>
 <td>
-<form class="" action="/libraryApp/controller" method="get">
+<form class="" action="/libraryApp/controller" method="post">
 <input type="hidden" name="command" value="viewAllAuthors"/>
 <input type="hidden" name="userId" value="${userId}"/>
 <input type="hidden" name="userRole" value="${user.getRole().toString()}"/>
@@ -79,7 +77,7 @@
 </form>
 </td>
 <td>
-<form class="" action="/libraryApp/controller" method="get">
+<form class="" action="/libraryApp/controller" method="post">
 <input type="hidden" name="command" value="viewAllBooks"/>
 <input type="hidden" name="userRole" value="${user.getRole().toString()}"/>
 <input type="hidden" name="userId" value="${user.getId()}"/>
@@ -87,7 +85,7 @@
 </form>
 </td>
 <td>
-<form class="" action="/libraryApp/controller" method="get">
+<form class="" action="/libraryApp/controller" method="post">
 <input type="hidden" name="command" value="viewAllOrders"/>
 <input type="hidden" name="userRole" value="${user.getRole().toString()}"/>
 <input type="hidden" name="userId" value="${user.getId()}"/>
@@ -95,7 +93,7 @@
 </form>
 </td>
 <td>
-<form class="" action="/libraryApp/controller" method="get">
+<form class="" action="/libraryApp/controller" method="post">
 <input type="hidden" name="command" value="viewAllPublishHouses"/>
 <input type="hidden" name="userRole" value="${user.getRole().toString()}"/>
 <input type="hidden" name="userId" value="${user.getId()}"/>

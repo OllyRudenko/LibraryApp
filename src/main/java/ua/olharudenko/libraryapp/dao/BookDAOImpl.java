@@ -2,7 +2,7 @@ package ua.olharudenko.libraryapp.dao;
 
 import ua.olharudenko.libraryapp.enums.Locale;
 import ua.olharudenko.libraryapp.models.Book;
-import ua.olharudenko.libraryapp.utils.DataBaseConnection;
+import ua.olharudenko.libraryapp.utils.ConnectionPool;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,7 +26,7 @@ public class BookDAOImpl implements ModelDAO<Book> {
         ResultSet resultSet = null;
         String sql = "select * from books  where id = ?";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             pstatement.setLong(1, id);
             if (pstatement.execute()) {
@@ -37,9 +37,9 @@ public class BookDAOImpl implements ModelDAO<Book> {
                     book.setTitle(resultSet.getString("title"));
                     book.setDescription(resultSet.getString("description"));
                     Locale locale = Locale.valueOf(resultSet.getString("publish_locale"));
-                    book.setPublish_locale(locale);
+                    book.setPublishLocale(locale);
                     book.setLocalizedAuthor(new LocalizedAuthorDAOImpl().get(resultSet.getLong("author_id"), locale).get());
-                    book.setPublish_house_id(resultSet.getLong("publish_house_id"));
+                    book.setPublishHouseId(resultSet.getLong("publish_house_id"));
                     book.setIssueDate(resultSet.getInt("issue_date"));
                     book.setItems(resultSet.getInt("items"));
                 }
@@ -67,7 +67,7 @@ public class BookDAOImpl implements ModelDAO<Book> {
         ResultSet resultSet = null;
         String sql = "select * from books";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             resultSet = pstatement.executeQuery();
             while (resultSet.next()) {
@@ -76,9 +76,9 @@ public class BookDAOImpl implements ModelDAO<Book> {
                 book.setTitle(resultSet.getString("title"));
                 book.setDescription(resultSet.getString("description"));
                 Locale locale = Locale.valueOf(resultSet.getString("publish_locale"));
-                book.setPublish_locale(locale);
+                book.setPublishLocale(locale);
                 book.setLocalizedAuthor(new LocalizedAuthorDAOImpl().get(resultSet.getLong("author_id"), locale).get());
-                book.setPublish_house_id(resultSet.getLong("publish_house_id"));
+                book.setPublishHouseId(resultSet.getLong("publish_house_id"));
                 book.setIssueDate(resultSet.getInt("issue_date"));
                 book.setItems(resultSet.getInt("items"));
                 allBooks.add(book);
@@ -103,16 +103,17 @@ public class BookDAOImpl implements ModelDAO<Book> {
     public Book save(Book book) {
         Connection connection = null;
         PreparedStatement pstatement = null;
-        String sql = "insert into books(title, author, issuing_organization, issue_date, items) values (?, ?, ?, ?, ?)";
+        String sql = "insert into books(title, author_id, description, publish_locale, publish_house_id, issue_date, items) values (?, ?, ?, ?, ?, ?, ?)";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstatement.setString(1, book.getTitle());
-            // todo book
-            //pstatement.setString(2, book.getAuthor());
-            //pstatement.setString(3, book.getIssuingOrganization());
-            pstatement.setInt(4, book.getIssueDate());
-            pstatement.setInt(5, book.getItems());
+            pstatement.setLong(2, book.getLocalizedAuthor().getAuthorId());
+            pstatement.setString(3, book.getDescription());
+            pstatement.setString(4, book.getPublishLocale().toString());
+            pstatement.setLong(5, book.getPublishHouseId());
+            pstatement.setInt(6, book.getIssueDate());
+            pstatement.setInt(7, book.getItems());
 
             if (pstatement.executeUpdate() == 0) {
                 throw new SQLException("Adding book to database failed, no rows affected.");
@@ -129,7 +130,6 @@ public class BookDAOImpl implements ModelDAO<Book> {
         } finally {
             try {
                 pstatement.close();
-                connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -143,7 +143,7 @@ public class BookDAOImpl implements ModelDAO<Book> {
         PreparedStatement pstatement = null;
         String sql = "UPDATE books SET title=?, author=?, issuing_organization=?, issue_date=?, items=? WHERE id =?";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             if (get(book.getId()) != null) {
                 pstatement.setLong(6, book.getId());
@@ -171,7 +171,7 @@ public class BookDAOImpl implements ModelDAO<Book> {
         PreparedStatement pstatement = null;
         String sql = "delete from books where id = ?";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             if (get(book.getId()) != null) {
                 pstatement.setLong(1, book.getId());
@@ -197,7 +197,7 @@ public class BookDAOImpl implements ModelDAO<Book> {
         ResultSet resultSet = null;
         String sql = "select * from books where author_id=?";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             pstatement.setLong(1, id);
             resultSet = pstatement.executeQuery();
@@ -207,9 +207,9 @@ public class BookDAOImpl implements ModelDAO<Book> {
                 book.setTitle(resultSet.getString("title"));
                 book.setDescription(resultSet.getString("description"));
                 Locale locale = Locale.valueOf(resultSet.getString("publish_locale"));
-                book.setPublish_locale(locale);
+                book.setPublishLocale(locale);
                 book.setLocalizedAuthor(new LocalizedAuthorDAOImpl().get(resultSet.getLong("author_id"), locale).get());
-                book.setPublish_house_id(resultSet.getLong("publish_house_id"));
+                book.setPublishHouseId(resultSet.getLong("publish_house_id"));
                 book.setIssueDate(resultSet.getInt("issue_date"));
                 book.setItems(resultSet.getInt("items"));
                 allBooks.add(book);

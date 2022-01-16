@@ -1,7 +1,7 @@
 package ua.olharudenko.libraryapp.dao;
 
 import ua.olharudenko.libraryapp.models.PublishingHouse;
-import ua.olharudenko.libraryapp.utils.DataBaseConnection;
+import ua.olharudenko.libraryapp.utils.ConnectionPool;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,7 +21,7 @@ public class PublishingHouseDAOImpl implements ModelDAO<PublishingHouse> {
         ResultSet resultSet = null;
         String sql = "select * from publishing_houses where id = ?";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             pstatement.setLong(1, id);
             if (pstatement.execute()) {
@@ -57,7 +57,7 @@ public class PublishingHouseDAOImpl implements ModelDAO<PublishingHouse> {
         ResultSet resultSet = null;
         String sql = "select * from publishing_houses";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             resultSet = pstatement.executeQuery();
             while (resultSet.next()) {
@@ -90,7 +90,7 @@ public class PublishingHouseDAOImpl implements ModelDAO<PublishingHouse> {
         PreparedStatement pstatement = null;
         String sql = "insert into publishing_houses(email, phone) values (?, ?)";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstatement.setString(1, publishingHouse.getEmail());
             pstatement.setString(2, publishingHouse.getPhone());
@@ -110,7 +110,6 @@ public class PublishingHouseDAOImpl implements ModelDAO<PublishingHouse> {
         } finally {
             try {
                 pstatement.close();
-                connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -124,7 +123,7 @@ public class PublishingHouseDAOImpl implements ModelDAO<PublishingHouse> {
         PreparedStatement pstatement = null;
         String sql = "UPDATE publishing_houses SET email=?, phone=? WHERE id =?";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             if (get(publishingHouse.getId()) != null) {
                 pstatement.setLong(3, publishingHouse.getId());
@@ -149,7 +148,7 @@ public class PublishingHouseDAOImpl implements ModelDAO<PublishingHouse> {
         PreparedStatement pstatement = null;
         String sql = "delete from publishing_houses where id = ?";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             if (get(publishingHouse.getId()) != null) {
                 pstatement.setLong(1, publishingHouse.getId());

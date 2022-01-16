@@ -26,8 +26,8 @@ public class MakeOrderCommand extends Command {
         var orderService = new OrderServiceImpl();
 
         List<Long> bookIds = converver(request.getParameterValues("id"));
-        var userId = Long.valueOf(request.getParameter("userId"));
-        var userRole = Role.valueOf(request.getParameter("userRole"));
+        Long userId = (Long)request.getSession().getAttribute("userId");
+        Role userRole = Role.valueOf((String) request.getSession().getAttribute("userRole"));
         int quantity = 1;
 
         String errorMessage = null;
@@ -42,7 +42,7 @@ public class MakeOrderCommand extends Command {
             return forward;
         } else {
             request.getSession().setAttribute("orders", orders);
-            request.getSession().setAttribute("userId", userId.toString());
+            request.getSession().setAttribute("userId", userId);
             request.getSession().setAttribute("userRole", userRole.toString());
             request.getSession().setAttribute("userLocale", Locale.EN.toString());
 

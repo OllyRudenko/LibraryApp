@@ -10,6 +10,7 @@ import ua.olharudenko.libraryapp.web.command.Command;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Optional;
@@ -19,8 +20,10 @@ public class ViewBookProfileCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
+        HttpSession session = request.getSession();
+
         var id = Long.valueOf(request.getParameter("id"));
-        var role = Role.valueOf(request.getParameter("userRole"));
+        Role role = Role.valueOf((String) session.getAttribute("userRole"));
 
         String errorMessage = null;
         String forward = "templates/error.jsp";

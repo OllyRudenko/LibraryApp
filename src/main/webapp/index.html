@@ -1,7 +1,7 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
+    <meta contentType="text/html; charset=UTF-8" pageEncoding="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -72,6 +72,19 @@
 <main>
 
     <section class="py-5 text-center container">
+        <div class="row py-lg-1">
+            <!-- Language switch -->
+            <p class="text-right lang">
+                <a class="c-pointer font-weight-bolder" th:classappend="${editData.locale.toString() eq 'RU'}? 'color-dark-red'"
+                   th:href="@{'/materials/news/update/' + ${slug}(locale='RU')}">RU</a>
+                <span class="mr-1 ml-1">/</span>
+                <a class="c-pointer font-weight-bolder" th:classappend="${editData.locale.toString() eq 'UK'}? 'color-dark-red'"
+                   th:href="@{'/materials/news/update/' + ${slug}(locale='UK')}">UA</a>
+                <span class="mr-1 ml-1">/</span>
+                <a class="c-pointer font-weight-bolder" th:classappend="${editData.locale.toString() eq 'EN'}? 'color-dark-red'"
+                   th:href="@{'/materials/news/update/' + ${slug}(locale='EN')}">EN</a>
+            </p>
+        </div>
         <div class="row py-lg-1">
             <div class="col-lg-6 col-md-8 mx-auto">
                 <h1 class="fw-light">NATIONAL LIBRARY</h1>

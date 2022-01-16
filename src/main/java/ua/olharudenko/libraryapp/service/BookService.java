@@ -11,4 +11,6 @@ public interface BookService {
     public List<Book> getAllBooks() throws SQLException;
 
     public List<Book> getAllBooksByAuthor(Long authorId) throws SQLException;
+
+    public Book save(Book book);
 }

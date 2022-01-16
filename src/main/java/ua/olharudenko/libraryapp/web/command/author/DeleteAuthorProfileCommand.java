@@ -20,20 +20,24 @@ public class DeleteAuthorProfileCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
-        var role = Role.valueOf(request.getParameter("userRole"));
+        var role = Role.valueOf((String) request.getSession().getAttribute("userRole"));
         var id = Long.valueOf(request.getParameter("id"));
         var local = Locale.valueOf(request.getParameter("locale"));
-        var userId = Long.valueOf(request.getParameter("userId"));
+        var userId = (Long) request.getSession().getAttribute("userId");
 
         String errorMessage = "DELETING FAILED";
         String forward = "templates/error.jsp";
 
-        Optional<LocalizedAuthor> authorForDelete = new LocalizedAuthorDAOImpl().get(id, local);
-        if (!authorForDelete.isEmpty()) {
-            new LocalizedAuthorDAOImpl().delete(authorForDelete.get());
-            request.getSession().setAttribute("userRole", role.toString());
-            request.getSession().setAttribute("userId", userId);
-            forward = "/controller?command=viewAllAuthors&role=".concat(role.name());
+        if(role.equals(Role.ADMIN) || role.equals(Role.LIBRARIAN)) {
+            Optional<LocalizedAuthor> authorForDelete = new LocalizedAuthorDAOImpl().get(id, local);
+            if (!authorForDelete.isEmpty()) {
+                new LocalizedAuthorDAOImpl().delete(authorForDelete.get());
+                request.getSession().setAttribute("userRole", role.toString());
+                request.getSession().setAttribute("userId", userId);
+                forward = "/controller?command=viewAllAuthors&role=".concat(role.name());
+            }
+        }else{
+            request.getSession().setAttribute("errorMessage", errorMessage);
         }
         return forward;
     }

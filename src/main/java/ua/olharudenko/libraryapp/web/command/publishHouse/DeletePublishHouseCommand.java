@@ -16,19 +16,19 @@ import java.util.Optional;
 public class DeletePublishHouseCommand extends Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
-        var role = Role.valueOf(request.getParameter("userRole"));
+        Role userRole = Role.valueOf((String) request.getSession().getAttribute("userRole"));
         var id = Long.valueOf(request.getParameter("id"));
         var locale = Locale.valueOf(request.getParameter("local"));
 
         String errorMessage = "DELETING FAILED";
         var forward = "templates/error.jsp";
 
-        if (role.equals(Role.ADMIN) || role.equals(Role.LIBRARIAN)) {
+        if (userRole.equals(Role.ADMIN) || userRole.equals(Role.LIBRARIAN)) {
             Optional<LocalizedPublishingHouse> houseForDelete = new LocalizedPublishingHouseServiceImpl().getBy(id, locale);
             if (!houseForDelete.isEmpty()) {
                 new LocalizedPublishingHouseServiceImpl().remove(houseForDelete.get());
-                request.getSession().setAttribute("userRole", role);
-                forward = "/controller?command=viewAllPublishHouses&role=".concat(role.name());
+                request.getSession().setAttribute("userRole", userRole.toString());
+                forward = "/controller?command=viewAllPublishHouses&role=".concat(userRole.name());
             }
         }
         return forward;

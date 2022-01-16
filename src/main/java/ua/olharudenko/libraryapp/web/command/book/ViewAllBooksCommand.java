@@ -20,8 +20,8 @@ public class ViewAllBooksCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        var role = Role.valueOf(request.getParameter("userRole"));
-        var userId = Long.valueOf(request.getParameter("userId"));
+        Role role = Role.valueOf((String) request.getSession().getAttribute("userRole"));
+        Long userId = (Long)request.getSession().getAttribute("userId");
 
         String errorMessage = null;
         String forward = "templates/error.jsp";
@@ -45,6 +45,7 @@ public class ViewAllBooksCommand extends Command {
             request.getSession().setAttribute("userLocale", Locale.EN.toString());
 
             if (role.equals(Role.ADMIN) || role.equals(Role.LIBRARIAN))
+                request.getSession().setAttribute("localesEnum", Locale.values());
                 forward = "templates/book/all_books_edit.jsp";
             if (role.equals(Role.VISITOR))
                 forward = "templates/book/all_books.jsp";

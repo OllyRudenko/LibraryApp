@@ -1,6 +1,7 @@
 package ua.olharudenko.libraryapp.web.command;
 
 import ua.olharudenko.libraryapp.web.command.author.*;
+import ua.olharudenko.libraryapp.web.command.book.AddNewBookCommand;
 import ua.olharudenko.libraryapp.web.command.book.DeleteBookCommand;
 import ua.olharudenko.libraryapp.web.command.book.ViewAllBooksCommand;
 import ua.olharudenko.libraryapp.web.command.book.ViewBookProfileCommand;
@@ -12,6 +13,7 @@ import ua.olharudenko.libraryapp.web.command.publishHouse.AddNewLocalizedPublish
 import ua.olharudenko.libraryapp.web.command.publishHouse.DeletePublishHouseCommand;
 import ua.olharudenko.libraryapp.web.command.publishHouse.ViewAllPublishHousesCommand;
 import ua.olharudenko.libraryapp.web.command.publishHouse.ViewHouseProfileCommand;
+import ua.olharudenko.libraryapp.web.command.user.ChangeUserRoleCommand;
 import ua.olharudenko.libraryapp.web.command.user.DeleteUserCommand;
 import ua.olharudenko.libraryapp.web.command.user.UpdateUserCommand;
 import ua.olharudenko.libraryapp.web.command.user.ViewAllUsersCommand;
@@ -25,11 +27,12 @@ public class CommandContainer {
     static {
 
         commands.put("login", new LoginCommand());
-//        commands.put("logout", new LogoutCommand());
+        commands.put("logout", new LogoutCommand());
         commands.put("registration", new RegistrationCommand());
         commands.put("updateUser", new UpdateUserCommand());
         commands.put("viewAllUsers", new ViewAllUsersCommand());
         commands.put("deleteUser", new DeleteUserCommand());
+        commands.put("changeUserRole", new ChangeUserRoleCommand());
         commands.put("noCommand", new NoCommand());
         commands.put("viewAllBooks", new ViewAllBooksCommand());
 
@@ -42,6 +45,7 @@ public class CommandContainer {
         commands.put("viewAllBooks", new ViewAllBooksCommand());
         commands.put("viewBookProfile", new ViewBookProfileCommand());
         commands.put("deleteBook", new DeleteBookCommand());
+        commands.put("addNewBook", new AddNewBookCommand());
 
         commands.put("viewAllPublishHouses", new ViewAllPublishHousesCommand());
         commands.put("viewHouseProfile", new ViewHouseProfileCommand());

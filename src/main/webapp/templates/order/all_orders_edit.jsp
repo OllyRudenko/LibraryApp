@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@page import="ua.olharudenko.libraryapp.models.LocalizedAuthor"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!DOCTYPE >
@@ -36,10 +37,10 @@
             <tbody>
                 <c:forEach items="${orders}" var="order">
                     <tr>
-                        <td><a class="btn btn-danger" href="/libraryApp/controller?command=viewAuthorProfile&id=${book.id}">
+                        <td><a class="btn btn-danger" href="/libraryApp/controller?command=viewBookProfile&id=${order.getBook().id}">
                         ${order.getBook().title}
                         </a></td>
-                        <td><a class="btn btn-danger" href="/libraryApp/controller?command=viewAuthorProfile&id=${book.getLocalizedAuthor().authorId}&locale=${book.publish_locale}">
+                        <td><a class="btn btn-danger" href="/libraryApp/controller?command=viewAuthorProfile&id=${order.getBook().getLocalizedAuthor().authorId}&locale=${order.getBook().getLocalizedAuthor().local}">
                         ${order.getBook().getLocalizedAuthor().fullName}</a>
                         </td>
                         <td>${order.getUser().firstName} ${order.getUser().lastName}</td>

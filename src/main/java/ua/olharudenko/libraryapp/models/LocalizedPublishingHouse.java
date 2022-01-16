@@ -3,6 +3,8 @@ package ua.olharudenko.libraryapp.models;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import ua.olharudenko.libraryapp.enums.Locale;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 public class LocalizedPublishingHouse {

@@ -20,8 +20,8 @@ public class ViewAllAuthorsCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        var role = Role.valueOf(request.getParameter("userRole"));
-        var userId = Long.valueOf(request.getParameter("userId"));
+        var role = Role.valueOf((String) request.getSession().getAttribute("userRole"));
+        var userId = (Long)request.getSession().getAttribute("userId");
 
         String errorMessage = null;
         String forward = "templates/error.jsp";

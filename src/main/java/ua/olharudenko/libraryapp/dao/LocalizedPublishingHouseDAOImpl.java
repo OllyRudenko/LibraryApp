@@ -2,7 +2,7 @@ package ua.olharudenko.libraryapp.dao;
 
 import ua.olharudenko.libraryapp.enums.Locale;
 import ua.olharudenko.libraryapp.models.LocalizedPublishingHouse;
-import ua.olharudenko.libraryapp.utils.DataBaseConnection;
+import ua.olharudenko.libraryapp.utils.ConnectionPool;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,7 +22,7 @@ public class LocalizedPublishingHouseDAOImpl implements LocalizedModelDAO<Locali
         String sql = "select * from localized_publishing_houses where publishing_house_id = ? and locale = ?";
         var publishHouse = new PublishingHouseDAOImpl().get(id);
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             pstatement.setLong(1, id);
             pstatement.setString(2, locale.toString());
@@ -60,7 +60,7 @@ public class LocalizedPublishingHouseDAOImpl implements LocalizedModelDAO<Locali
         ResultSet resultSet = null;
         String sql = "select * from localized_publishing_houses";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             resultSet = pstatement.executeQuery();
             while (resultSet.next()) {
@@ -94,7 +94,7 @@ public class LocalizedPublishingHouseDAOImpl implements LocalizedModelDAO<Locali
         PreparedStatement pstatement = null;
         String sql = "insert into localized_publishing_houses(locale, publishing_house_id, city, adress, name_house) values (?, ?, ?, ?, ?)";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
 
             pstatement.setString(1, localizedPublishingHouse.getLocale().toString());
@@ -111,7 +111,6 @@ public class LocalizedPublishingHouseDAOImpl implements LocalizedModelDAO<Locali
         } finally {
             try {
                 pstatement.close();
-                connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -130,7 +129,7 @@ public class LocalizedPublishingHouseDAOImpl implements LocalizedModelDAO<Locali
         PreparedStatement pstatement = null;
         String sql = "delete from localized_publishing_houses where publishing_house_id = ? and locale = ?";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             if (this.get(localizedPublishingHouse.getPublishingHouseId(), localizedPublishingHouse.getLocale()) != null) {
                 pstatement.setLong(1, localizedPublishingHouse.getPublishingHouseId());

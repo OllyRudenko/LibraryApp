@@ -2,11 +2,16 @@ package ua.olharudenko.libraryapp.service;
 
 import ua.olharudenko.libraryapp.enums.OrderStatus;
 import ua.olharudenko.libraryapp.models.Book;
+import ua.olharudenko.libraryapp.models.User;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface VisitorService {
+
+    public User registration(User user);
+
+    public boolean isExistEmail(String email);
 
     public Optional<Book> findByAuthor();
 

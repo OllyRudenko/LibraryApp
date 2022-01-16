@@ -23,13 +23,13 @@ public class ViewAllOrdersCommand extends Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
         var orderService = new OrderServiceImpl();
 
-        var role = Role.valueOf(request.getParameter("userRole"));
-        Long userId = Long.valueOf(request.getParameter("userId"));
+        Long userId = (Long)request.getSession().getAttribute("userId");
+        Role userRole = Role.valueOf((String) request.getSession().getAttribute("userRole"));
 
         String errorMessage = null;
         var forward = "templates/error.jsp";
 
-        List<Order> orders = orderService.getAllOrders(userId, role);
+        List<Order> orders = orderService.getAllOrders(userId, userRole);
 
         if (orders.size() == 0) {
             errorMessage = "Order List is empty";
@@ -38,10 +38,10 @@ public class ViewAllOrdersCommand extends Command {
             return forward;
         } else {
             request.getSession().setAttribute("orders", orders);
-            request.getSession().setAttribute("userRole", role.toString());
+            request.getSession().setAttribute("userRole", userRole.toString());
             request.getSession().setAttribute("userId", userId);
             request.getSession().setAttribute("userLocale", Locale.EN.toString());
-            if (role == Role.ADMIN || role == Role.LIBRARIAN)
+            if (userRole == Role.ADMIN || userRole == Role.LIBRARIAN)
                 forward = "templates/order/all_orders_edit.jsp";
             else {
                 forward = "templates/order/visitor_orders.jsp";

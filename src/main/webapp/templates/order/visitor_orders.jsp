@@ -13,6 +13,7 @@
 </head>
     <body>
     <% String userRole = (String) request.getSession().getAttribute("userRole"); %>
+    <% Long userId = (Long) request.getSession().getAttribute("userId"); %>
     <div class="container">
 
     	<input type="hidden" name="command" value="viewAllBooks"/>
@@ -33,16 +34,16 @@
             <tbody>
                 <c:forEach items="${orders}" var="order">
                     <tr>
-                        <td><a class="btn btn-danger" href="/libraryApp/controller?command=viewBookProfile&id=${order.getBook().id}&userRole=${userRole}">
+                        <td><a class="btn btn-danger" href="/libraryApp/controller?command=viewBookProfile&id=${order.getBook().id}">
                         ${order.getBook().title}
                         </a></td>
-                        <td><a class="btn btn-danger" href="/libraryApp/controller?command=viewAuthorProfile&id=${order.getBook().getLocalizedAuthor().authorId}&locale=${order.getBook().publish_locale}">
+                        <td><a class="btn btn-danger" href="/libraryApp/controller?command=viewAuthorProfile&id=${order.getBook().getLocalizedAuthor().authorId}&locale=${order.getBook().publishLocale}">
                         ${order.getBook().getLocalizedAuthor().fullName}</a>
                         </td>
                         <td>${order.orderStatus}</td>
                         <td>${order.adminOrderStatus}</td>
                         <td>
-                        <a class="btn btn-danger" onclick="return confirm('Are you sure you want to delete?')" href="/libraryApp/controller?command=deleteOrder&userRole=${userRole}&id=${order.id}&userId=${order.getUser().id}">Delete</a>
+                        <a class="btn btn-danger" onclick="return confirm('Are you sure you want to delete?')" href="/libraryApp/controller?command=deleteOrder&id=${order.id}">Delete</a>
                         </td>
                     </tr>
                 </c:forEach>

@@ -2,7 +2,7 @@ package ua.olharudenko.libraryapp.dao;
 
 import ua.olharudenko.libraryapp.enums.Role;
 import ua.olharudenko.libraryapp.models.User;
-import ua.olharudenko.libraryapp.utils.DataBaseConnection;
+import ua.olharudenko.libraryapp.utils.ConnectionPool;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,7 +23,7 @@ public class UserDAOImpl implements ModelDAO<User> {
         ResultSet resultSet = null;
         String sql = "select * from users  where id = ?";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             pstatement.setLong(1, id);
             if (pstatement.execute()) {
@@ -63,7 +63,7 @@ public class UserDAOImpl implements ModelDAO<User> {
         ResultSet resultSet = null;
         String sql = "select * from users";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             resultSet = pstatement.executeQuery();
             while (resultSet.next()) {
@@ -100,7 +100,7 @@ public class UserDAOImpl implements ModelDAO<User> {
         PreparedStatement pstatement = null;
         String sql = "insert into users(first_name, last_name, role, email, password, phone, adress) values (?, ?, ?, ?, ?, ?, ?)";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstatement.setString(1, user.getFirstName());
             pstatement.setString(2, user.getLastName());
@@ -125,7 +125,6 @@ public class UserDAOImpl implements ModelDAO<User> {
         } finally {
             try {
                 pstatement.close();
-                connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -139,7 +138,7 @@ public class UserDAOImpl implements ModelDAO<User> {
         PreparedStatement pstatement = null;
         String sql = "UPDATE users SET first_name=?, last_name=?, role=?, email=?, password=?, phone=?, adress=? WHERE id =?";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             if (get(user.getId()) != null) {
                 pstatement.setLong(8, user.getId());
@@ -169,7 +168,7 @@ public class UserDAOImpl implements ModelDAO<User> {
         PreparedStatement pstatement = null;
         String sql = "delete from users where id = ?";
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             if (get(user.getId()) != null) {
                 pstatement.setLong(1, user.getId());
@@ -196,7 +195,7 @@ public class UserDAOImpl implements ModelDAO<User> {
         String sql = "select * from users  where email = ?";
         System.out.println("EMAIL " + email);
         try {
-            connection = DataBaseConnection.getInstance().getConn();
+            connection = ConnectionPool.getInstance().getConn();
             pstatement = connection.prepareStatement(sql);
             pstatement.setString(1, email);
             if (pstatement.execute()) {
@@ -221,7 +220,6 @@ public class UserDAOImpl implements ModelDAO<User> {
                 if (resultSet != null) {
                     resultSet.close();
                 }
-//                pstatement.close();
             } catch (SQLException e) {
                 throw new SQLException("get: ResultSet or PreparedStatement didn't close", e);
             }

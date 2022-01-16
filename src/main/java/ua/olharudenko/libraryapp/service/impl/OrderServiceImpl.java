@@ -98,12 +98,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Boolean delete(Order order, Long userId) throws SQLException {
-        if (userDAO.get(userId).get().getRole().equals(Role.VISITOR)
+    public Boolean delete(Order order, Role userRole) throws SQLException {
+        if (userRole.equals(Role.VISITOR)
                 && order.getAdminOrderStatus().equals(AdminOrderStatus.UNCONFIRMED)) {
             orderDao.delete(order);
             return true;
-        } else if (userDAO.get(userId).get().getRole().equals(Role.ADMIN) || userDAO.get(userId).get().getRole().equals(Role.LIBRARIAN)) {
+        } else if (userRole.equals(Role.ADMIN) || userRole.equals(Role.LIBRARIAN)) {
             orderDao.delete(order);
             return true;
         }

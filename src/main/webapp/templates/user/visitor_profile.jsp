@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@page import="ua.olharudenko.libraryapp.models.User"%>
+<%@page import="ua.olharudenko.libraryapp.models.Order"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page import="org.apache.taglibs.standard.tag.rt.fmt.BundleTag"%>
 <%@ page import="java.util.*" import="java.io.*"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -56,14 +58,52 @@
 </h1>
 <br><br>
 <a href="templates/user/user_profile_update.jsp">update</a>
+<a href="/libraryApp/controller?command=logout">logout</a>
     </section>
         </div>
 </div>
 
+<div class="container">
+
+    	<input type="hidden" name="command" value="viewAllBooks"/>
+    	<input type="hidden" name="userId" value="${userId}"/>
+    	<input type="hidden" name="userRole" value="${userRole}"/>
+
+        <table class="table table-striped">
+            <thead>
+                <tr><td><h3>My Orders:</h3></td></tr>
+                <tr class="tr tr-success">
+                    <td>Book</td>
+                    <td>Authors</td>
+                    <td>Status</td>
+                    <td>is confirm</td>
+                </tr>
+            </thead>
+
+            <tbody>
+                <c:forEach items="${orders}" var="order">
+                    <tr>
+                        <td><a class="btn btn-danger" href="/libraryApp/controller?command=viewBookProfile&id=${order.getBook().id}">
+                        ${order.getBook().title}
+                        </a></td>
+                        <td><a class="btn btn-danger" href="/libraryApp/controller?command=viewAuthorProfile&id=${order.getBook().getLocalizedAuthor().authorId}&locale=${order.getBook().publishLocale}">
+                        ${order.getBook().getLocalizedAuthor().fullName}</a>
+                        </td>
+                        <td>${order.orderStatus}</td>
+                        <td>${order.adminOrderStatus}</td>
+                        <td>
+                        <a class="btn btn-danger" onclick="return confirm('Are you sure you want to delete?')" href="/libraryApp/controller?command=deleteOrder&id=${order.id}">Delete</a>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </tbody>
+        </table>
+    </div>
+
 <div>
 <table><tr>
 <td>
-<form class="" action="/libraryApp/controller" method="get">
+<form class="" action="/libraryApp/controller" method="post">
 <input type="hidden" name="command" value="viewAllAuthors"/>
 <input type="hidden" name="userId" value="${userId}"/>
 <input type="hidden" name="userRole" value="${user.getRole().toString()}"/>
@@ -72,7 +112,7 @@
 </td>
 
 <td>
-<form class="" action="/libraryApp/controller" method="get">
+<form class="" action="/libraryApp/controller" method="post">
 <input type="hidden" name="command" value="viewAllBooks"/>
 <input type="hidden" name="userRole" value="${user.getRole().toString()}"/>
 <input type="hidden" name="userId" value="${user.getId()}"/>
@@ -81,7 +121,7 @@
 </td>
 
 <td>
-<form class="" action="/libraryApp/controller" method="get">
+<form class="" action="/libraryApp/controller" method="post">
 <input type="hidden" name="command" value="viewAllOrders"/>
 <input type="hidden" name="userRole" value="${user.getRole().toString()}"/>
 <input type="hidden" name="userId" value="${user.getId()}"/>

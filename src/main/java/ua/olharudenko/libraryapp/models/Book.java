@@ -5,44 +5,55 @@ import java.util.Objects;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import ua.olharudenko.libraryapp.enums.Locale;
 
+import javax.validation.constraints.*;
+
 public class Book extends BaseEntity {
 
     private Long id;
 
+    @NotBlank
+    @Size(min = 1, max = 200)
     private String title;
 
+    @NotNull
     private LocalizedAuthor author;
 
+    @NotBlank
+    @Size(min = 1, max = 2000)
     private String description;
 
-    private Locale publish_locale;
+    @NotNull
+    private Locale publishLocale;
 
-    private Long publish_house_id;
+    @NotNull
+    private Long publishHouseId;
 
+    @NotNull
     private int issueDate;
 
+    @NotNull
     private int items;
 
     public Book() {
     }
 
-    public Book(String title, LocalizedAuthor author, String description, Locale publish_locale, Long publish_house_id, int issueDate, int items) {
+    public Book(String title, LocalizedAuthor author, String description, Locale publishLocale, Long publishHouseId, int issueDate, int items) {
         this.title = title;
         this.author = author;
         this.description = description;
-        this.publish_locale = publish_locale;
-        this.publish_house_id = publish_house_id;
+        this.publishLocale = publishLocale;
+        this.publishHouseId = publishHouseId;
         this.issueDate = issueDate;
         this.items = items;
     }
 
-    public Book(Long id, String title, LocalizedAuthor author, String description, Locale publish_locale, Long publish_house_id, int issueDate, int items) {
+    public Book(Long id, String title, LocalizedAuthor author, String description, Locale publishLocale, Long publishHouseId, int issueDate, int items) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.description = description;
-        this.publish_locale = publish_locale;
-        this.publish_house_id = publish_house_id;
+        this.publishLocale = publishLocale;
+        this.publishHouseId = publishHouseId;
         this.issueDate = issueDate;
         this.items = items;
     }
@@ -79,20 +90,20 @@ public class Book extends BaseEntity {
         this.description = description;
     }
 
-    public Locale getPublish_locale() {
-        return publish_locale;
+    public Locale getPublishLocale() {
+        return publishLocale;
     }
 
-    public void setPublish_locale(Locale publish_locale) {
-        this.publish_locale = publish_locale;
+    public void setPublishLocale(Locale publishLocale) {
+        this.publishLocale = publishLocale;
     }
 
-    public Long getPublish_house_id() {
-        return publish_house_id;
+    public Long getPublishHouseId() {
+        return publishHouseId;
     }
 
-    public void setPublish_house_id(Long publish_house_id) {
-        this.publish_house_id = publish_house_id;
+    public void setPublishHouseId(Long publishHouseId) {
+        this.publishHouseId = publishHouseId;
     }
 
     public int getIssueDate() {
@@ -116,12 +127,12 @@ public class Book extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return issueDate == book.issueDate && items == book.items && Objects.equals(id, book.id) && Objects.equals(title, book.title) && Objects.equals(author, book.author) && Objects.equals(description, book.description) && publish_locale == book.publish_locale && Objects.equals(publish_house_id, book.publish_house_id);
+        return issueDate == book.issueDate && items == book.items && Objects.equals(id, book.id) && Objects.equals(title, book.title) && Objects.equals(author, book.author) && Objects.equals(description, book.description) && publishLocale == book.publishLocale && Objects.equals(publishHouseId, book.publishHouseId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, author, description, publish_locale, publish_house_id, issueDate, items);
+        return Objects.hash(id, title, author, description, publishLocale, publishHouseId, issueDate, items);
     }
 
     @Override
@@ -131,8 +142,8 @@ public class Book extends BaseEntity {
                 .append("title", title)
                 .append("author", author)
                 .append("description", description)
-                .append("publish_locale", publish_locale)
-                .append("publish_house_id", publish_house_id)
+                .append("publish_locale", publishLocale)
+                .append("publish_house_id", publishHouseId)
                 .append("issueDate", issueDate)
                 .append("items", items)
                 .toString();

@@ -23,23 +23,25 @@ public class DeleteOrderCommand extends Command {
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
-        var role = Role.valueOf(request.getParameter("userRole"));
+        Long userId = (Long)request.getSession().getAttribute("userId");
+        Role userRole = Role.valueOf((String) request.getSession().getAttribute("userRole"));
         var orderId = Long.valueOf(request.getParameter("id"));
-        var userId = Long.valueOf(request.getParameter("userId"));
 
         String errorMessage = "DELETING FAILED";
         String forward = "templates/error.jsp";
 
         Optional<Order> orderForDelete = new OrderDaoImpl().get(orderId);
         if (!orderForDelete.isEmpty()) {
-            boolean result = new OrderServiceImpl().delete(orderForDelete.get(), userId);
-            request.getSession().setAttribute("userRole", role);
+            boolean result = new OrderServiceImpl().delete(orderForDelete.get(), userRole);
+            request.getSession().setAttribute("userRole", userRole.toString());
             request.getSession().setAttribute("userId", userId);
             forward = "/controller?command=viewAllOrders";
             if(!result) {
                 errorMessage = "Status your order confirmed by Admin. You cannot delete it";
                 request.getSession().setAttribute("errorMessage", errorMessage);
             }
+        } else {
+            request.getSession().setAttribute("errorMessage", errorMessage);
         }
 
         // todo how make alert window
