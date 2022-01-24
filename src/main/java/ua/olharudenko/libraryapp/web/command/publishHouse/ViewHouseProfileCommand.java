@@ -19,6 +19,8 @@ import java.util.Optional;
 public class ViewHouseProfileCommand extends Command {
     private final Logger logger = LogManager.getLogger(ViewBookProfileCommand.class);
 
+    LocalizedPublishingHouseServiceImpl localizedPublishingHouseService = new LocalizedPublishingHouseServiceImpl();
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
         var id = Long.valueOf(request.getParameter("id"));
@@ -28,8 +30,8 @@ public class ViewHouseProfileCommand extends Command {
         String errorMessage = null;
         var forward = "templates/error.jsp";
 
-        Optional<LocalizedPublishingHouse> localizedPublishingHouse = new LocalizedPublishingHouseServiceImpl().getBy(id, locale);
-        System.out.println(localizedPublishingHouse.toString());
+        Optional<LocalizedPublishingHouse> localizedPublishingHouse = localizedPublishingHouseService.getBy(id, locale);
+
         if (localizedPublishingHouse.isEmpty()) {
             errorMessage = "Publishing House isn't exsist";
             request.getSession().setAttribute("errorMessage", errorMessage);

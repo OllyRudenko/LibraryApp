@@ -23,6 +23,6 @@ public class LogoutCommand extends Command {
 
         logger.debug("Logout done");
 
-        return "templates/index.html";
+        return "templates/index.jsp";
     }
 }

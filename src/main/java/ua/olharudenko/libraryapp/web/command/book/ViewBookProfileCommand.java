@@ -18,6 +18,8 @@ import java.util.Optional;
 public class ViewBookProfileCommand extends Command {
     private final Logger logger = LogManager.getLogger(ViewBookProfileCommand.class);
 
+    BookDAOImpl bookDAO = new BookDAOImpl();
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
         HttpSession session = request.getSession();
@@ -28,7 +30,7 @@ public class ViewBookProfileCommand extends Command {
         String errorMessage = null;
         String forward = "templates/error.jsp";
 
-        Optional<Book> book = new BookDAOImpl().get(id);
+        Optional<Book> book = bookDAO.get(id);
 
         if (book.isEmpty()) {
             errorMessage = "Book isn't exsist";

@@ -14,6 +14,9 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 public class DeletePublishHouseCommand extends Command {
+
+    LocalizedPublishingHouseServiceImpl localizedPublishingHouseService = new LocalizedPublishingHouseServiceImpl();
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
         Role userRole = Role.valueOf((String) request.getSession().getAttribute("userRole"));
@@ -24,9 +27,9 @@ public class DeletePublishHouseCommand extends Command {
         var forward = "templates/error.jsp";
 
         if (userRole.equals(Role.ADMIN) || userRole.equals(Role.LIBRARIAN)) {
-            Optional<LocalizedPublishingHouse> houseForDelete = new LocalizedPublishingHouseServiceImpl().getBy(id, locale);
+            Optional<LocalizedPublishingHouse> houseForDelete = localizedPublishingHouseService.getBy(id, locale);
             if (!houseForDelete.isEmpty()) {
-                new LocalizedPublishingHouseServiceImpl().remove(houseForDelete.get());
+                localizedPublishingHouseService.remove(houseForDelete.get());
                 request.getSession().setAttribute("userRole", userRole.toString());
                 forward = "/controller?command=viewAllPublishHouses&role=".concat(userRole.name());
             }

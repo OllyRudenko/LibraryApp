@@ -22,6 +22,8 @@ import java.util.Map;
 public class AddNewLocalizedPublishingHouseCommand extends Command {
     private final Logger logger = LogManager.getLogger(AddNewLocalizedPublishingHouseCommand.class);
 
+    LocalizedPublishingHouseServiceImpl localizedPublishingHouseService = new LocalizedPublishingHouseServiceImpl();
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
         Role userRole = Role.valueOf((String) request.getSession().getAttribute("userRole"));
@@ -44,8 +46,8 @@ public class AddNewLocalizedPublishingHouseCommand extends Command {
                 request.setAttribute("errors", errors);
                 forward = "templates/publish_house/all_publish_house_edit.jsp";
             } else {
-                savedLocalizedPublishingHouse = new LocalizedPublishingHouseServiceImpl().save(localizedPublishingHouse, publishingHouse);
-                if (localizedPublishingHouse == null) {
+                savedLocalizedPublishingHouse = localizedPublishingHouseService.save(localizedPublishingHouse, publishingHouse);
+                if (savedLocalizedPublishingHouse == null) {
                     errorMessage = "Cannot add author, please try againe";
                     request.getSession().setAttribute("errorMessage", errorMessage);
                     logger.info("errorMessage: " + errorMessage);

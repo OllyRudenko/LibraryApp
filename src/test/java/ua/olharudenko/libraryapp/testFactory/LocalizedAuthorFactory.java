@@ -26,4 +26,8 @@ public class LocalizedAuthorFactory {
     public static LocalizedAuthor createLocalizedAuthor(String fullName) {
         return new LocalizedAuthor(AUTHOR_ID, fullName, LOCAL, BIOGRAFY, PHOTO);
     }
+
+    public static LocalizedAuthor createLocalizedAuthorWithoutID() {
+        return new LocalizedAuthor(FULL_NAME, LOCAL, BIOGRAFY, PHOTO);
+    }
 }

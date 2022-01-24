@@ -18,17 +18,19 @@ import java.util.List;
 public class ViewAllBooksCommand extends Command {
     private final Logger logger = LogManager.getLogger(ViewAllBooksCommand.class);
 
+    BookDAOImpl bookDAO = new BookDAOImpl();
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         Role role = Role.valueOf((String) request.getSession().getAttribute("userRole"));
-        Long userId = (Long)request.getSession().getAttribute("userId");
+        Long userId = (Long) request.getSession().getAttribute("userId");
 
         String errorMessage = null;
         String forward = "templates/error.jsp";
 
         List<Book> books = null;
         try {
-            books = new BookDAOImpl().getAll();
+            books = bookDAO.getAll();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -46,7 +48,7 @@ public class ViewAllBooksCommand extends Command {
 
             if (role.equals(Role.ADMIN) || role.equals(Role.LIBRARIAN))
                 request.getSession().setAttribute("localesEnum", Locale.values());
-                forward = "templates/book/all_books_edit.jsp";
+            forward = "templates/book/all_books_edit.jsp";
             if (role.equals(Role.VISITOR))
                 forward = "templates/book/all_books.jsp";
         }

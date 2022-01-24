@@ -28,8 +28,11 @@ public class LoginCommand extends Command {
         HttpSession session = request.getSession();
 
         var email = request.getParameter("email");
-
         var password = request.getParameter("password");
+
+        Locale userLocale = Locale.valueOf((String) session.getAttribute("locale"));
+
+        System.out.println(userLocale.toString() + "!!!!!!!!!!!!!!!!!!! ");
 
         logger.info("get email and password from request");
 
@@ -60,7 +63,7 @@ public class LoginCommand extends Command {
                 forward = "templates/user/librarian_profile.jsp";
 
             if (userRole == Role.VISITOR) {
-                getAllVisitorOrders(user.get().getId(), userRole, request);
+                getAllVisitorOrders(user.get().getId(), userRole, request, userLocale);
                 forward = "templates/user/visitor_profile.jsp";
             }
 
@@ -68,24 +71,32 @@ public class LoginCommand extends Command {
             request.getSession().setAttribute("userId", user.get().getId());
 
             request.getSession().setAttribute("userRole", userRole.toString());
-            Config.set(session, "javax.servlet.jsp.jstl.fmt.locale", Locale.RU.toString());
-            request.getSession().setAttribute("userLocale", Locale.RU.toString());
+            Config.set(session, "javax.servlet.jsp.jstl.fmt.locale", userLocale.toString());
+            //request.getSession().setAttribute("locale", userLocale.toString());
         }
 
         return forward;
     }
 
-    private List<Order> getAllVisitorOrders(Long userId, Role userRole, HttpServletRequest request) throws SQLException {
+    private List<Order> getAllVisitorOrders(Long userId, Role userRole, HttpServletRequest request, Locale userLocale) throws SQLException {
         List<Order> orders = new OrderServiceImpl().getAllOrders(userId, userRole);
 
         if (!(orders.size() == 0)) {
             request.getSession().setAttribute("orders", orders);
             request.getSession().setAttribute("userRole", userRole.toString());
             request.getSession().setAttribute("userId", userId);
-            request.getSession().setAttribute("userLocale", Locale.EN.toString());
+            Config.set(request.getSession(), "javax.servlet.jsp.jstl.fmt.locale", userLocale.toString());
+            //request.getSession().setAttribute("locale", Locale.EN.toString());
+            request.getSession().setAttribute("locale", request.getSession().getAttribute("language"));
             }
 
         return orders;
     }
+
+//
+//<!-- <c:set var="language" value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}" scope="session" />
+//<fmt:setLocale value="${language}"/>
+//<fmt:setBundle basename="i18n.lang"/>
+//            -->
 }
 

@@ -18,6 +18,8 @@ import java.util.Optional;
 public class DeleteAuthorProfileCommand extends Command {
     private final Logger logger = LogManager.getLogger(DeleteAuthorProfileCommand.class);
 
+    LocalizedAuthorDAOImpl localizedAuthorDAO = new LocalizedAuthorDAOImpl();
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
         var role = Role.valueOf((String) request.getSession().getAttribute("userRole"));
@@ -29,9 +31,9 @@ public class DeleteAuthorProfileCommand extends Command {
         String forward = "templates/error.jsp";
 
         if(role.equals(Role.ADMIN) || role.equals(Role.LIBRARIAN)) {
-            Optional<LocalizedAuthor> authorForDelete = new LocalizedAuthorDAOImpl().get(id, local);
+            Optional<LocalizedAuthor> authorForDelete = localizedAuthorDAO.get(id, local);
             if (!authorForDelete.isEmpty()) {
-                new LocalizedAuthorDAOImpl().delete(authorForDelete.get());
+                localizedAuthorDAO.delete(authorForDelete.get());
                 request.getSession().setAttribute("userRole", role.toString());
                 request.getSession().setAttribute("userId", userId);
                 forward = "/controller?command=viewAllAuthors&role=".concat(role.name());

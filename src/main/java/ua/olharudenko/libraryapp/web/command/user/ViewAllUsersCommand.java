@@ -18,6 +18,8 @@ import java.util.List;
 public class ViewAllUsersCommand extends Command {
     private final Logger logger = LogManager.getLogger(ViewAllUsersCommand.class);
 
+    UserDAOImpl userDAO = new UserDAOImpl();
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         var role = Role.valueOf(request.getParameter("userRole"));
@@ -28,7 +30,7 @@ public class ViewAllUsersCommand extends Command {
         List<User> users = null;
 
         try {
-            users = new UserDAOImpl().getAll();
+            users = userDAO.getAll();
         } catch (SQLException e) {
             e.printStackTrace();
         }

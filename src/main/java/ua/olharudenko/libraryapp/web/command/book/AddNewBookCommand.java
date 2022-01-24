@@ -2,34 +2,30 @@ package ua.olharudenko.libraryapp.web.command.book;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ua.olharudenko.libraryapp.dao.BookDAOImpl;
 import ua.olharudenko.libraryapp.dao.LocalizedAuthorDAOImpl;
 import ua.olharudenko.libraryapp.enums.Locale;
 import ua.olharudenko.libraryapp.enums.Role;
 import ua.olharudenko.libraryapp.models.Book;
 import ua.olharudenko.libraryapp.models.LocalizedAuthor;
-import ua.olharudenko.libraryapp.service.BookService;
 import ua.olharudenko.libraryapp.service.impl.BookServiceImpl;
 import ua.olharudenko.libraryapp.web.command.Command;
-import ua.olharudenko.libraryapp.web.command.author.AddNewAuthorCommand;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import static org.apache.commons.lang3.StringUtils.isNumeric;
 
 public class AddNewBookCommand extends Command {
     private final Logger logger = LogManager.getLogger(AddNewBookCommand.class);
+
+    LocalizedAuthorDAOImpl localizedAuthorDAO = new LocalizedAuthorDAOImpl();
+
+    BookServiceImpl bookService = new BookServiceImpl();
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
@@ -53,8 +49,8 @@ public class AddNewBookCommand extends Command {
                 request.setAttribute("errors", errors);
                 forward = "templates/book/all_books_edit.jsp";
             } else {
-                savedBook = new BookServiceImpl().save(book);
-                if (book == null) {
+                savedBook = bookService.save(book);
+                if (savedBook == null) {
                     errorMessage = "Cannot add book, please try againe";
                     request.getSession().setAttribute("errorMessage", errorMessage);
                     logger.info("errorMessage: " + errorMessage);
@@ -91,7 +87,7 @@ public class AddNewBookCommand extends Command {
         } else {
             if (locale != null && authorId != null) {
                 // todo Service if by locale not found - back default locale
-                LocalizedAuthor author = new LocalizedAuthorDAOImpl().get(Long.parseLong(authorId), book.getPublishLocale()).get();
+                LocalizedAuthor author = localizedAuthorDAO.get(Long.parseLong(authorId), book.getPublishLocale()).get();
                 book.setLocalizedAuthor(author);
             }
         }

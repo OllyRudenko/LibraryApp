@@ -22,6 +22,10 @@ import java.util.Optional;
 public class ViewAuthorProfileCommand extends Command {
     private final Logger logger = LogManager.getLogger(ViewAuthorProfileCommand.class);
 
+    LocalizedAuthorDAOImpl localizedAuthorDAO = new LocalizedAuthorDAOImpl();
+
+    BookServiceImpl bookService = new BookServiceImpl();
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
         HttpSession session = request.getSession();
@@ -33,15 +37,15 @@ public class ViewAuthorProfileCommand extends Command {
         String errorMessage = null;
         String forward = "templates/error.jsp";
 
-        Optional<LocalizedAuthor> author = new LocalizedAuthorDAOImpl().get(authorId, local);
+        Optional<LocalizedAuthor> author = localizedAuthorDAO.get(authorId, local);
 
-        if (author.isEmpty()) {
+        if (!author.isPresent()) {
             errorMessage = "Author isn't exsist";
             request.getSession().setAttribute("errorMessage", errorMessage);
             logger.info("errorMessage: " + errorMessage);
             return forward;
         }
-        List<Book> books = new BookServiceImpl().getAllBooksByAuthor(author.get().getAuthorId());
+        List<Book> books = bookService.getAllBooksByAuthor(author.get().getAuthorId());
         if(books.size() != 0){
             request.getSession().setAttribute("books", books);
         }

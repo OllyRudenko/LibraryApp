@@ -18,24 +18,26 @@ import java.util.Optional;
 public class DeleteBookCommand extends Command {
     private final Logger logger = LogManager.getLogger(DeleteBookCommand.class);
 
+    BookDAOImpl bookDAO = new BookDAOImpl();
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
         Role role = Role.valueOf((String) request.getSession().getAttribute("userRole"));
         var id = Long.valueOf(request.getParameter("id"));
-        var locale = Locale.valueOf(request.getParameter("locale"));
+//        var locale = Locale.valueOf(request.getParameter("locale"));
 
         String errorMessage = "DELETING FAILED";
         String forward = "templates/error.jsp";
 
         if (role.equals(Role.ADMIN) || role.equals(Role.LIBRARIAN)) {
-            Optional<Book> bookForDelete = new BookDAOImpl().get(id);
-            if (!bookForDelete.isEmpty()) {
-                new BookDAOImpl().delete(bookForDelete.get());
+            Optional<Book> bookForDelete = bookDAO.get(id);
+            if (bookForDelete.isPresent()) {
+                bookDAO.delete(bookForDelete.get());
                 request.getSession().setAttribute("userRole", role.toString());
                 forward = "/controller?command=viewAllBooks";
+            } else {
+                request.getSession().setAttribute("errorMessage", errorMessage);
             }
-        }else{
-            request.getSession().setAttribute("errorMessage", errorMessage);
         }
         return forward;
     }

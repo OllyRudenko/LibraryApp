@@ -18,6 +18,8 @@ import java.util.List;
 public class ViewAllPublishHousesCommand extends Command {
     private final Logger logger = LogManager.getLogger(ViewAllPublishHousesCommand.class);
 
+    LocalizedPublishingHouseServiceImpl localizedPublishingHouseService = new LocalizedPublishingHouseServiceImpl();
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
         Long userId = (Long)request.getSession().getAttribute("userId");
@@ -26,7 +28,7 @@ public class ViewAllPublishHousesCommand extends Command {
         String errorMessage = null;
         var forward = "templates/error.jsp";
 
-        List<LocalizedPublishingHouse> publishingHouses = new LocalizedPublishingHouseServiceImpl().getAll();
+        List<LocalizedPublishingHouse> publishingHouses = localizedPublishingHouseService.getAll();
 
         if (publishingHouses.size() == 0) {
             errorMessage = "PublishingHouse List is empty";

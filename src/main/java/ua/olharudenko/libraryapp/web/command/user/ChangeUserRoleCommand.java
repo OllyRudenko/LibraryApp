@@ -20,9 +20,10 @@ import java.util.List;
 public class ChangeUserRoleCommand extends Command {
     private final Logger logger = LogManager.getLogger(ChangeUserRoleCommand.class);
 
+    AdminServiceImpl adminService = new AdminServiceImpl();
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
-        AdminServiceImpl adminService = new AdminServiceImpl();
 
         List<Long> librarianIds = converver(request.getParameterValues("idForLibrarian"));
         List<Long> adminIds = converver(request.getParameterValues("idForAdmin"));

@@ -18,6 +18,8 @@ import java.util.Optional;
 public class UpdateUserCommand extends Command {
     private final Logger logger = LogManager.getLogger(UpdateUserCommand.class);
 
+    UserDAOImpl userDAO = new UserDAOImpl();
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
 
@@ -36,8 +38,8 @@ public class UpdateUserCommand extends Command {
         String errorMessage = null;
         var forward = "templates/error.jsp";
 
-        new UserDAOImpl().update(user);
-        Optional<User> updatedUser = new UserDAOImpl().get(id);
+        userDAO.update(user);
+        Optional<User> updatedUser = userDAO.get(id);
 
         if (updatedUser.isEmpty()) {
             errorMessage = "Cannot update user, please try againe";

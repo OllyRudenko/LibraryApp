@@ -90,10 +90,11 @@ public class LocalizedAuthorDAOImpl implements LocalizedModelDAO<LocalizedAuthor
 
     @Override
     public LocalizedAuthor save(LocalizedAuthor localizedAuthor) {
+        AuthorDAOImpl authorDAO = new AuthorDAOImpl();
         Connection connection = null;
         PreparedStatement pstatement = null;
         String sql = "insert into localized_authors(author_id, full_name, locale, biografy) values (?, ?, ?, ?)";
-        var author = new AuthorDAOImpl().save(new Author(localizedAuthor.getFullName(), null));
+        var author = authorDAO.save(new Author(localizedAuthor.getFullName(), null));
         localizedAuthor.setAuthorId(author.getId());
         try {
             connection = ConnectionPool.getInstance().getConn();

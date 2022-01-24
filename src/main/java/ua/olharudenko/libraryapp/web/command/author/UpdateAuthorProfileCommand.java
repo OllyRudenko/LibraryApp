@@ -18,6 +18,8 @@ import java.util.Optional;
 public class UpdateAuthorProfileCommand extends Command {
     private final Logger logger = LogManager.getLogger(ViewAuthorProfileCommand.class);
 
+    LocalizedAuthorDAOImpl localizedAuthorDAO = new LocalizedAuthorDAOImpl();
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
         var authorId = Long.valueOf(request.getParameter("authorId"));
@@ -30,7 +32,7 @@ public class UpdateAuthorProfileCommand extends Command {
         String errorMessage = "UPDATE FAILED";
         String forward = "templates/error.jsp";
 
-        Optional<LocalizedAuthor> author = new LocalizedAuthorDAOImpl().get(authorId, local);
+        Optional<LocalizedAuthor> author = localizedAuthorDAO.get(authorId, local);
         if(role.equals(Role.ADMIN) || role.equals(Role.LIBRARIAN)) {
             if (author.isEmpty()) {
                 errorMessage = "Author isn't exsist";
@@ -40,8 +42,8 @@ public class UpdateAuthorProfileCommand extends Command {
             }
             author.get().setFullName(fullName);
             author.get().setBiografy(biografy);
-            new LocalizedAuthorDAOImpl().update(author.get());
-            LocalizedAuthor localizedAuthor = new LocalizedAuthorDAOImpl().get(authorId, local).get();
+            localizedAuthorDAO.update(author.get());
+            LocalizedAuthor localizedAuthor = localizedAuthorDAO.get(authorId, local).get();
             request.getSession().setAttribute("author", localizedAuthor);
             forward = "templates/author/author_profile.jsp";
         }else{

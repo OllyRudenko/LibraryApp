@@ -18,6 +18,8 @@ import java.util.List;
 public class ViewAllAuthorsCommand extends Command {
     private final Logger logger = LogManager.getLogger(ViewAllAuthorsCommand.class);
 
+    LocalizedAuthorDAOImpl localizedAuthorDAO = new LocalizedAuthorDAOImpl();
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         var role = Role.valueOf((String) request.getSession().getAttribute("userRole"));
@@ -28,7 +30,7 @@ public class ViewAllAuthorsCommand extends Command {
 
         List<LocalizedAuthor> authors = null;
         try {
-            authors = new LocalizedAuthorDAOImpl().getAll();
+            authors = localizedAuthorDAO.getAll();
         } catch (SQLException e) {
             e.printStackTrace();
         }
