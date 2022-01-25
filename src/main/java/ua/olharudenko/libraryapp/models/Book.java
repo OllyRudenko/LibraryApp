@@ -1,5 +1,6 @@
 package ua.olharudenko.libraryapp.models;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -7,7 +8,7 @@ import ua.olharudenko.libraryapp.enums.Locale;
 
 import javax.validation.constraints.*;
 
-public class Book extends BaseEntity {
+public class Book extends BaseEntity implements Comparable {
 
     private Long id;
 
@@ -147,5 +148,10 @@ public class Book extends BaseEntity {
                 .append("issueDate", issueDate)
                 .append("items", items)
                 .toString();
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return this.getTitle().compareTo(((Book)o).getTitle());
     }
 }

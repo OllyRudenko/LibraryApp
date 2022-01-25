@@ -13,10 +13,7 @@ import ua.olharudenko.libraryapp.web.command.publishHouse.AddNewLocalizedPublish
 import ua.olharudenko.libraryapp.web.command.publishHouse.DeletePublishHouseCommand;
 import ua.olharudenko.libraryapp.web.command.publishHouse.ViewAllPublishHousesCommand;
 import ua.olharudenko.libraryapp.web.command.publishHouse.ViewHouseProfileCommand;
-import ua.olharudenko.libraryapp.web.command.user.ChangeUserRoleCommand;
-import ua.olharudenko.libraryapp.web.command.user.DeleteUserCommand;
-import ua.olharudenko.libraryapp.web.command.user.UpdateUserCommand;
-import ua.olharudenko.libraryapp.web.command.user.ViewAllUsersCommand;
+import ua.olharudenko.libraryapp.web.command.user.*;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -57,6 +54,7 @@ public class CommandContainer {
         commands.put("viewAllOrders", new ViewAllOrdersCommand());
         commands.put("deleteOrder", new DeleteOrderCommand());
         commands.put("changeAdminOrderStatus", new ChangeAdminOrderStatusCommand());
+        commands.put("findBySearchWords", new FindBySearchWordsCommand());
 
         //todo
         commands.put("listUnconfirmedOrders", new ListUnconfirmedOrdersCommand());

@@ -1,21 +1,26 @@
 package ua.olharudenko.libraryapp.web;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 public class ContextListener implements ServletContextListener {
 
+    private static final Logger log = LogManager.getLogger(ContextListener.class);
+
     public void contextDestroyed(ServletContextEvent event) {
     }
 
     public void contextInitialized(ServletContextEvent event) {
-        log("Servlet context initialization starts");
+        log.info("Servlet context initialization starts");
 
         ServletContext servletContext = event.getServletContext();
         initCommandContainer();
 
-        log("Servlet context initialization finished");
+        log.info("Servlet context initialization finished");
     }
 
     private void initCommandContainer() {
@@ -24,10 +29,6 @@ public class ContextListener implements ServletContextListener {
         } catch (ClassNotFoundException ex) {
             throw new RuntimeException(ex);
         }
-    }
-
-    private void log(String msg) {
-        System.out.println("[ContextListener] " + msg);
     }
 
 }

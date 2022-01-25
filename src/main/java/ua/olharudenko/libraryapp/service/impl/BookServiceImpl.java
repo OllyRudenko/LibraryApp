@@ -5,6 +5,8 @@ import ua.olharudenko.libraryapp.models.Book;
 import ua.olharudenko.libraryapp.service.BookService;
 
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +20,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> getAllBooksByAuthor(Long authorId) throws SQLException {
-        return bookDAO.getAllBooksByAuthor(authorId);
+        List<Book> allBooks = bookDAO.getAllBooksByAuthor(authorId);
+        Collections.sort(allBooks, Collections.reverseOrder());
+        return allBooks;
     }
 
     @Override

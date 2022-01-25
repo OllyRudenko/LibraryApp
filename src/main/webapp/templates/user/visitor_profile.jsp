@@ -101,7 +101,20 @@
     </div>
 
 <div>
-<table><tr>
+<table>
+<tr>
+<form class="" action="/libraryApp/controller" method="post" onsubmit="return checkForm(this);">
+<input type="hidden" name="command" value="findBySearchWords"/>
+<input type="hidden" name="userRole" value="${userRole}"/>
+
+<br><fmt:message key="input_search_words"/><br><input type="text" name="searchWords"/>
+<button class="" type="submit"><fmt:message key="search"/></button>
+</form>
+<br><br>
+</tr>
+</table>
+<table>
+<tr>
 <td>
 <form class="" action="/libraryApp/controller" method="post">
 <input type="hidden" name="command" value="viewAllAuthors"/>

@@ -94,7 +94,7 @@
         </div>
         <div class="row py-lg-1">
             <div class="col-lg-6 col-md-8 mx-auto">
-                <h1 class="fw-light">NATIONAL LIBRARY</h1>
+                <h1 class="fw-light"><fmt:message key="national_library"/></h1>
                 <p class="lead text-muted">Read and Enjoy!</p>
                 <p class="lead text-muted">but first:</p>
                 <p>
