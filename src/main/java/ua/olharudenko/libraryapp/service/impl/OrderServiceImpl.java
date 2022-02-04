@@ -47,7 +47,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> changeAdminOrderStatus(List<Long> orderIds, Role userRole) {
         List<Order> orders = new ArrayList<Order>();
-        if(userRole.equals(Role.ADMIN) || userRole.equals(Role.LIBRARIAN)) {
+        if (userRole.equals(Role.ADMIN) || userRole.equals(Role.LIBRARIAN)) {
             orderIds.stream().forEach(i -> adminOrdering(i));
             try {
                 orders = orderDao.getAll();
@@ -74,7 +74,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     //todo back to front
-    private int calculateBookItems(Long bookId, int quantity){
+    private int calculateBookItems(Long bookId, int quantity) {
         Optional<Book> book = null;
         int items = 0;
         try {
@@ -95,6 +95,31 @@ public class OrderServiceImpl implements OrderService {
         } else {
             return orderDao.getAll();
         }
+    }
+
+    @Override
+    public List<Order> getConfirmedOrders(Long userId, Role role) throws SQLException {
+        if (role.equals(Role.VISITOR)) {
+            return orderDao.getConfirmedOrdersByUser(userId, AdminOrderStatus.CONFIRMED.name());
+        } else {
+            return orderDao.getAll();
+        }
+    }
+
+    public List<Order> getConfirmedOrdersBy(LocalDate stDate, LocalDate eDate, Long userId, Role role) throws SQLException {
+        List<Order> orders = new ArrayList<>();
+        List<Order> sortedOrders = new ArrayList<>();
+        if (role.equals(Role.VISITOR)) {
+            orders = orderDao.getConfirmedOrdersByUser(userId, AdminOrderStatus.CONFIRMED.name());
+
+            for (Order o : orders) {
+                if((o.getTakedDate().isAfter(stDate) || o.getTakedDate().isEqual(stDate))
+                && (o.getTakedDate().isBefore(eDate) || o.getTakedDate().isEqual(eDate))){
+                    sortedOrders.add(o);
+                }
+            }
+        }
+        return sortedOrders;
     }
 
     @Override

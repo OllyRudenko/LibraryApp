@@ -288,4 +288,49 @@ public class OrderDaoImpl implements ModelDAO<Order> {
         }
         return allOrders;
     }
+
+
+    public List<Order> getConfirmedOrdersByUser(Long id, String adminOrderStatus) throws SQLException {
+        List<Order> allOrders = new ArrayList<Order>();
+        Connection connection = null;
+        PreparedStatement pstatement = null;
+        ResultSet resultSet = null;
+        String sql = "select * from orders where user_id = ? and admin_order_status = ?";
+        try {
+            connection = ConnectionPool.getInstance().getConn();
+            pstatement = connection.prepareStatement(sql);
+            pstatement.setLong(1, id);
+            pstatement.setString(2, adminOrderStatus);
+            resultSet = pstatement.executeQuery();
+            while (resultSet.next()) {
+                Order order = new Order();
+                order.setId(resultSet.getLong("id"));
+                order.setBook(new Book());
+                order.setBook(bookDAO.get(resultSet.getLong("book_id")).get());
+                order.setQuantity(resultSet.getInt("quantity"));
+                order.setUser(userDAO.get(resultSet.getInt("user_id")).get());
+                order.setOrderStatus(OrderStatus.valueOf(resultSet.getString("order_status")));
+                order.setAdminOrderStatus(AdminOrderStatus.valueOf(resultSet.getString("admin_order_status")));
+                order.setBill(resultSet.getDouble("bill"));
+                order.setBillStatus(BillStatus.valueOf(resultSet.getString("bill_status")));
+                if (resultSet.getTimestamp("taked_date") != null) {
+                    order.setTakedDate(resultSet.getTimestamp("taked_date").toLocalDateTime().toLocalDate());
+                    order.setReturnDate(resultSet.getTimestamp("return_date").toLocalDateTime().toLocalDate());
+                }
+                allOrders.add(order);
+            }
+        } catch (SQLException e) {
+            throw new SQLException("ORDERS NOT FOUND", e);
+        } finally {
+            try {
+                pstatement.close();
+            } catch (SQLException e) {
+                throw new SQLException("findAll():PreparedStatement didn't close", e);
+            }
+        }
+        if (allOrders.size() == 0) {
+            throw new SQLException("table ORDERS is empty");
+        }
+        return allOrders;
+    }
 }

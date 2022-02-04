@@ -27,7 +27,7 @@ public class SetLocaleFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         if(count == 1) {
             Config.set(((HttpServletRequest) request).getSession(), "javax.servlet.jsp.jstl.fmt.locale", "UK");
-            req.getSession().setAttribute("locale", "UK");
+            req.getSession().setAttribute("locale", "EN");
         }
 
         chain.doFilter(request, response);

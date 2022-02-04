@@ -9,11 +9,13 @@ import java.util.List;
 
 public interface OrderService {
 
-    public List<Order> makeOrder(Long userId, List<Long> bookIds, OrderStatus orderStatus, int quantity);
+    List<Order> makeOrder(Long userId, List<Long> bookIds, OrderStatus orderStatus, int quantity);
 
-    public List<Order>changeAdminOrderStatus(List<Long> orderIds, Role userRole);
+    List<Order> changeAdminOrderStatus(List<Long> orderIds, Role userRole);
 
-    public List<Order> getAllOrders(Long userId, Role role) throws SQLException;
+    List<Order> getAllOrders(Long userId, Role role) throws SQLException;
+
+    List<Order> getConfirmedOrders(Long userId, Role role) throws SQLException;
 
     Boolean delete(Order order, Role userRole) throws SQLException;
 }

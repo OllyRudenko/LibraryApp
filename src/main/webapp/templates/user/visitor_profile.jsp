@@ -65,6 +65,49 @@
 
 <div class="container">
 
+    	<input type="hidden" name="userId" value="${userId}"/>
+    	<input type="hidden" name="userRole" value="${userRole}"/>
+
+<form class="" action="/libraryApp/controller" method="post" onsubmit="return checkForm(this);">
+        <input type="hidden" name="command" value="login"/>
+        <input type="hidden" name="email" value='<jsp:getProperty property="email" name="user"/>'/>
+        <input type="hidden" name="password" value='<jsp:getProperty property="password" name="user"/>'/>
+    	<input type="date" name="startDate">
+    	<input type="date" name="endDate">
+    	<button class="w-100 mb-2 btn btn-lg rounded-4 btn-primary" type="submit">submit</button>
+</form>
+
+        <table class="table table-striped">
+            <thead>
+                <tr><td><h3>My Confirmed Orders:</h3></td></tr>
+                <tr class="tr tr-success">
+                    <td>Book</td>
+                    <td>Authors</td>
+                    <td>Status</td>
+                    <td>date</td>
+                </tr>
+            </thead>
+
+            <tbody>
+                <c:forEach items="${confirmedOrders}" var="cOrder">
+                    <tr>
+                        <td><a class="btn btn-danger" href="/libraryApp/controller?command=viewBookProfile&id=${order.getBook().id}">
+                        ${cOrder.getBook().title}
+                        </a></td>
+                        <td><a class="btn btn-danger" href="/libraryApp/controller?command=viewAuthorProfile&id=${order.getBook().getLocalizedAuthor().authorId}&locale=${order.getBook().publishLocale}">
+                        ${cOrder.getBook().getLocalizedAuthor().fullName}</a>
+                        </td>
+                        <td>${cOrder.orderStatus}</td>
+                        <td>${cOrder.takedDate}</td>
+
+                    </tr>
+                </c:forEach>
+            </tbody>
+        </table>
+    </div>
+
+<div class="container">
+
     	<input type="hidden" name="command" value="viewAllBooks"/>
     	<input type="hidden" name="userId" value="${userId}"/>
     	<input type="hidden" name="userRole" value="${userRole}"/>

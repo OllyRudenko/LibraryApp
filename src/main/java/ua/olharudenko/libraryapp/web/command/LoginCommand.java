@@ -16,6 +16,8 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,6 +66,9 @@ public class LoginCommand extends Command {
 
             if (userRole == Role.VISITOR) {
                 getAllVisitorOrders(user.get().getId(), userRole, request, userLocale);
+                getConfirmedVisitorOrders(user.get().getId(), userRole, request, userLocale);
+                request.setAttribute("email", email);
+                request.setAttribute("password", password);
                 forward = "templates/user/visitor_profile.jsp";
             }
 
@@ -89,6 +94,30 @@ public class LoginCommand extends Command {
             //request.getSession().setAttribute("locale", Locale.EN.toString());
             request.getSession().setAttribute("locale", request.getSession().getAttribute("language"));
             }
+
+        return orders;
+    }
+
+    private List<Order> getConfirmedVisitorOrders(Long userId, Role userRole, HttpServletRequest request, Locale userLocale) throws SQLException {
+        List<Order> orders = new ArrayList<>();
+
+        String startDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
+        if(startDate!=null && endDate !=null){
+            LocalDate stDate = LocalDate.parse(startDate);
+            LocalDate eDate = LocalDate.parse(endDate);
+            orders = new OrderServiceImpl().getConfirmedOrdersBy(stDate, eDate, userId, userRole);
+        }else{
+            orders = new OrderServiceImpl().getConfirmedOrders(userId, userRole);
+        }
+        if (!(orders.size() == 0)) {
+            request.getSession().setAttribute("confirmedOrders", orders);
+            request.getSession().setAttribute("userRole", userRole.toString());
+            request.getSession().setAttribute("userId", userId);
+            Config.set(request.getSession(), "javax.servlet.jsp.jstl.fmt.locale", userLocale.toString());
+            //request.getSession().setAttribute("locale", Locale.EN.toString());
+            request.getSession().setAttribute("locale", request.getSession().getAttribute("language"));
+        }
 
         return orders;
     }
